@@ -17,8 +17,8 @@
    nnoremap <C-b>9 9gt
    nnoremap <C-b>0 0gt
 
-   tnoremap <C-b>n gt
-   tnoremap <C-b>p gT
+   nnoremap <C-b>n gt
+   nnoremap <C-b>p gT
 
    tnoremap <C-b>c <C-\><C-n>:tabe<CR>
    tnoremap <C-b>! <C-\><C-n>:tabe %<CR>
