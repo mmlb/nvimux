@@ -1,4 +1,25 @@
-function nvimux#term#bindings()
+ if !exists('$TMUX')
+   nnoremap <C-b>c :tabe<CR>
+   nnoremap <C-b>! :tabe %<CR>
+   nnoremap <C-b>% :vspl<CR>
+   nnoremap <C-b>" :spl<CR>
+   nnoremap <C-b>q :Ttoggle<CR>
+   nnoremap <C-b>w :tabs<CR>
+
+   nnoremap <C-b>1 1gt
+   nnoremap <C-b>2 2gt
+   nnoremap <C-b>3 3gt
+   nnoremap <C-b>4 4gt
+   nnoremap <C-b>5 5gt
+   nnoremap <C-b>6 6gt
+   nnoremap <C-b>7 7gt
+   nnoremap <C-b>8 8gt
+   nnoremap <C-b>9 9gt
+   nnoremap <C-b>0 0gt
+
+   tnoremap <C-b>n gt
+   tnoremap <C-b>p gT
+
    tnoremap <C-b>c <C-\><C-n>:tabe<CR>
    tnoremap <C-b>! <C-\><C-n>:tabe %<CR>
    tnoremap <C-b>% <C-\><C-n>:vnew<CR>
@@ -27,32 +48,4 @@ function nvimux#term#bindings()
 
    tnoremap <C-b>n <C-\><C-n>gt
    tnoremap <C-b>p <C-\><C-n>gT
-endfunction
-
-function nvimux#normal#bindings()
-   nnoremap <C-b>c :tabe<CR>
-   nnoremap <C-b>! :tabe %<CR>
-   nnoremap <C-b>% :vspl<CR>
-   nnoremap <C-b>" :spl<CR>
-   nnoremap <C-b>q :Ttoggle<CR>
-   nnoremap <C-b>w :tabs<CR>
-
-   nnoremap <C-b>1 1gt
-   nnoremap <C-b>2 2gt
-   nnoremap <C-b>3 3gt
-   nnoremap <C-b>4 4gt
-   nnoremap <C-b>5 5gt
-   nnoremap <C-b>6 6gt
-   nnoremap <C-b>7 7gt
-   nnoremap <C-b>8 8gt
-   nnoremap <C-b>9 9gt
-   nnoremap <C-b>0 0gt
-
-   tnoremap <C-b>n gt
-   tnoremap <C-b>p gT
- endfunction
-
- if !exists('$TMUX')
-   nvimux#normal#bindings()
-   nvimux#term#bindings()
 endif
