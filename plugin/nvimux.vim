@@ -20,7 +20,8 @@
    nnoremap <C-b>n gt
    nnoremap <C-b>p gT
 
-   nnoremap <C-b>x :bd %<CR>
+   nnoremap <C-b>x :x<CR>
+   nnoremap <C-b>X :bd %<CR>
 
    tnoremap <C-b>c <C-\><C-n>:tabe<CR>
    tnoremap <C-b>! <C-\><C-n>:tabe %<CR>
