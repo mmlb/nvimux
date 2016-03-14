@@ -14,7 +14,7 @@ TODO
 
 There are some things I wish to do:
 
--[ ] Allow alternate tmux prefix
--[ ] Enable alternate commands to commands (i.e. `<C-b>c` could open a terminal on a new tab)
--[ ] Add more tmux bindings
--[ ] Allow toggling mappings for terminal mode
+- [ ] Allow alternate tmux prefix
+- [ ] Enable alternate commands to commands (i.e. `<C-b>c` could open a terminal on a new tab)
+- [ ] Add more tmux bindings
+- [ ] Allow toggling mappings for terminal mode
