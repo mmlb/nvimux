@@ -23,6 +23,8 @@
    nnoremap <C-b>x :x<CR>
    nnoremap <C-b>X :bd %<CR>
 
+   nnoremap <C-b>] pa
+
    tnoremap <C-b>c <C-\><C-n>:tabe<CR>
    tnoremap <C-b>! <C-\><C-n>:tabe %<CR>
    tnoremap <C-b>% <C-\><C-n>:vnew<CR>
