@@ -1,56 +1,59 @@
- if !exists('$TMUX')
-   nnoremap <C-b>c :tabe<CR>
-   nnoremap <C-b>! :tabe %<CR>
-   nnoremap <C-b>% :vspl<CR>
-   nnoremap <C-b>" :spl<CR>
-   nnoremap <C-b>q :Ttoggle<CR>
-   nnoremap <C-b>w :tabs<CR>
+if !exists('g:nvimux_prefix')
+  let g:nvimux_prefix='<C-b>'
+endif
 
-   nnoremap <C-b>1 1gt
-   nnoremap <C-b>2 2gt
-   nnoremap <C-b>3 3gt
-   nnoremap <C-b>4 4gt
-   nnoremap <C-b>5 5gt
-   nnoremap <C-b>6 6gt
-   nnoremap <C-b>7 7gt
-   nnoremap <C-b>8 8gt
-   nnoremap <C-b>9 9gt
-   nnoremap <C-b>0 0gt
+if !exists('g:nvimux_terminal_quit')
+  let g:nvimux_terminal_quit='<C-\><C-n>'
+endif
 
-   nnoremap <C-b>n gt
-   nnoremap <C-b>p gT
+function! s:nvimux_define_normal_bindings()
+  exec 'nnoremap '.g:nvimux_prefix.'c :tabe<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'! :tabe %<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'% :vspl<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'" :spl<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'q :Ttoggle<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'w :tabs<CR>'
 
-   nnoremap <C-b>x :x<CR>
-   nnoremap <C-b>X :bd %<CR>
+  for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    exec 'nnoremap '.g:nvimux_prefix.i.' '.i.'gt'
+  endfor
 
-   nnoremap <C-b>] pa
+  exec 'nnoremap '.g:nvimux_prefix.'n gt'
+  exec 'nnoremap '.g:nvimux_prefix.'p gT'
 
-   tnoremap <C-b>c <C-\><C-n>:tabe<CR>
-   tnoremap <C-b>! <C-\><C-n>:tabe %<CR>
-   tnoremap <C-b>% <C-\><C-n>:vnew<CR>
-   tnoremap <C-b>" <C-\><C-n>:new<CR>
-   tnoremap <C-b>w <C-\><C-n>:tabs<CR>
+  exec 'nnoremap '.g:nvimux_prefix.'x :x<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'X :bd %<CR>'
 
-   tnoremap <C-b>q <C-\><C-n>:Ttoggle<CR>
+  exec 'nnoremap '.g:nvimux_prefix.'] pa'
 
-   tnoremap <C-b>: <C-\><C-n>:
-   tnoremap <C-b>[ <C-\><C-n>
-   tnoremap <C-b>h <C-\><C-n><C-w><C-h>
-   tnoremap <C-b>j <C-\><C-n><C-w><C-j>
-   tnoremap <C-b>k <C-\><C-n><C-w><C-k>
-   tnoremap <C-b>l <C-\><C-n><C-w><C-l>
+endfunction
 
-   tnoremap <C-b>1 <C-\><C-n>1gt
-   tnoremap <C-b>2 <C-\><C-n>2gt
-   tnoremap <C-b>3 <C-\><C-n>3gt
-   tnoremap <C-b>4 <C-\><C-n>4gt
-   tnoremap <C-b>5 <C-\><C-n>5gt
-   tnoremap <C-b>6 <C-\><C-n>6gt
-   tnoremap <C-b>7 <C-\><C-n>7gt
-   tnoremap <C-b>8 <C-\><C-n>8gt
-   tnoremap <C-b>9 <C-\><C-n>9gt
-   tnoremap <C-b>0 <C-\><C-n>0gt
+function! s:nvimux_define_terminal_bindings()
+  exec 'tnoremap '.g:nvimux_prefix.'c '.g:nvimux_terminal_quit.':tabe<CR>'
+  exec 'tnoremap '.g:nvimux_prefix.'! '.g:nvimux_terminal_quit.':tabe %<CR>'
+  exec 'tnoremap '.g:nvimux_prefix.'% '.g:nvimux_terminal_quit.':vnew<CR>'
+  exec 'tnoremap '.g:nvimux_prefix.'" '.g:nvimux_terminal_quit.':new<CR>'
+  exec 'tnoremap '.g:nvimux_prefix.'w '.g:nvimux_terminal_quit.':tabs<CR>'
 
-   tnoremap <C-b>n <C-\><C-n>gt
-   tnoremap <C-b>p <C-\><C-n>gT
+  exec 'tnoremap '.g:nvimux_prefix.'q '.g:nvimux_terminal_quit.':Ttoggle<CR>'
+
+  exec 'tnoremap '.g:nvimux_prefix.': '.g:nvimux_terminal_quit.':'
+  exec 'tnoremap '.g:nvimux_prefix.'[ '.g:nvimux_terminal_quit.''
+  exec 'tnoremap '.g:nvimux_prefix.'h '.g:nvimux_terminal_quit.'<C-w><C-h>'
+  exec 'tnoremap '.g:nvimux_prefix.'j '.g:nvimux_terminal_quit.'<C-w><C-j>'
+  exec 'tnoremap '.g:nvimux_prefix.'k '.g:nvimux_terminal_quit.'<C-w><C-k>'
+  exec 'tnoremap '.g:nvimux_prefix.'l '.g:nvimux_terminal_quit.'<C-w><C-l>'
+
+  for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    exec 'nnoremap '.g:nvimux_prefix.i.' 'g:nvimux_terminal_quit.i.'gt'
+  endfor
+
+  exec 'tnoremap '.g:nvimux_prefix.'n '.g:nvimux_terminal_quit.'gt'
+  exec 'tnoremap '.g:nvimux_prefix.'p '.g:nvimux_terminal_quit.'gT'
+
+endfunction
+
+if !exists('$TMUX')
+  call s:nvimux_define_normal_bindings()
+  call s:nvimux_define_terminal_bindings()
 endif
