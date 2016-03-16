@@ -13,6 +13,7 @@ function! s:nvimux_define_normal_bindings()
   exec 'nnoremap '.g:nvimux_prefix.'" :spl<CR>'
   exec 'nnoremap '.g:nvimux_prefix.'q :Ttoggle<CR>'
   exec 'nnoremap '.g:nvimux_prefix.'w :tabs<CR>'
+  exec 'nnoremap '.g:nvimux_prefix.'o <C-w>w'
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
     exec 'nnoremap '.g:nvimux_prefix.i.' '.i.'gt'
@@ -43,6 +44,7 @@ function! s:nvimux_define_terminal_bindings()
   exec 'tnoremap '.g:nvimux_prefix.'j '.g:nvimux_terminal_quit.'<C-w><C-j>'
   exec 'tnoremap '.g:nvimux_prefix.'k '.g:nvimux_terminal_quit.'<C-w><C-k>'
   exec 'tnoremap '.g:nvimux_prefix.'l '.g:nvimux_terminal_quit.'<C-w><C-l>'
+  exec 'tnoremap '.g:nvimux_prefix.'o '.g:nvimux_terminal_quit.'<C-w>w'
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
     exec 'nnoremap '.g:nvimux_prefix.i.' 'g:nvimux_terminal_quit.i.'gt'
