@@ -6,52 +6,60 @@ if !exists('g:nvimux_terminal_quit')
   let g:nvimux_terminal_quit='<C-\><C-n>'
 endif
 
+function! s:nvimux_bind_key_normal(k, v) abort
+  exec 'nnoremap '.g:nvimux_prefix.a:k." ".a:v
+endfunction
+
+function! s:nvimux_bind_key_term(k, v) abort
+  exec 'tnoremap '.g:nvimux_prefix.a:k." ".g:nvimux_terminal_quit.a:v
+endfunction
+
 function! s:nvimux_define_normal_bindings()
-  exec 'nnoremap '.g:nvimux_prefix.'c :tabe<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'! :tabe %<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'% :vspl<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'" :spl<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'q :Ttoggle<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'w :tabs<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'o <C-w>w'
+  call s:nvimux_bind_key_normal('c', ':tabe<CR>')
+  call s:nvimux_bind_key_normal('!', ':tabe %<CR>')
+  call s:nvimux_bind_key_normal('%', ':vspl<CR>')
+  call s:nvimux_bind_key_normal('"', ':spl<CR>')
+  call s:nvimux_bind_key_normal('q', ':Ttoggle<CR>')
+  call s:nvimux_bind_key_normal('w', ':tabs<CR>')
+  call s:nvimux_bind_key_normal('o', '<C-w>w')
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    exec 'nnoremap '.g:nvimux_prefix.i.' '.i.'gt'
+    call s:nvimux_bind_key_normal(i, i.'gt')
   endfor
 
-  exec 'nnoremap '.g:nvimux_prefix.'n gt'
-  exec 'nnoremap '.g:nvimux_prefix.'p gT'
+  call s:nvimux_bind_key_normal('n', 'gt')
+  call s:nvimux_bind_key_normal('p', 'gT')
 
-  exec 'nnoremap '.g:nvimux_prefix.'x :x<CR>'
-  exec 'nnoremap '.g:nvimux_prefix.'X :bd %<CR>'
+  call s:nvimux_bind_key_normal('x', ':x<CR>')
+  call s:nvimux_bind_key_normal('X', ':bd %<CR>')
 
-  exec 'nnoremap '.g:nvimux_prefix.'] pa'
+  call s:nvimux_bind_key_normal(']', 'pa')
 
 endfunction
 
 function! s:nvimux_define_terminal_bindings()
-  exec 'tnoremap '.g:nvimux_prefix.'c '.g:nvimux_terminal_quit.':tabe<CR>'
-  exec 'tnoremap '.g:nvimux_prefix.'! '.g:nvimux_terminal_quit.':tabe %<CR>'
-  exec 'tnoremap '.g:nvimux_prefix.'% '.g:nvimux_terminal_quit.':vnew<CR>'
-  exec 'tnoremap '.g:nvimux_prefix.'" '.g:nvimux_terminal_quit.':new<CR>'
-  exec 'tnoremap '.g:nvimux_prefix.'w '.g:nvimux_terminal_quit.':tabs<CR>'
+  call s:nvimux_bind_key_term('c', ':tabe<CR>')
+  call s:nvimux_bind_key_term('!', ':tabe %<CR>')
+  call s:nvimux_bind_key_term('%', ':vnew<CR>')
+  call s:nvimux_bind_key_term('"', ':new<CR>')
+  call s:nvimux_bind_key_term('w', ':tabs<CR>')
 
-  exec 'tnoremap '.g:nvimux_prefix.'q '.g:nvimux_terminal_quit.':Ttoggle<CR>'
+  call s:nvimux_bind_key_term('q', ':Ttoggle<CR>')
 
-  exec 'tnoremap '.g:nvimux_prefix.': '.g:nvimux_terminal_quit.':'
-  exec 'tnoremap '.g:nvimux_prefix.'[ '.g:nvimux_terminal_quit.''
-  exec 'tnoremap '.g:nvimux_prefix.'h '.g:nvimux_terminal_quit.'<C-w><C-h>'
-  exec 'tnoremap '.g:nvimux_prefix.'j '.g:nvimux_terminal_quit.'<C-w><C-j>'
-  exec 'tnoremap '.g:nvimux_prefix.'k '.g:nvimux_terminal_quit.'<C-w><C-k>'
-  exec 'tnoremap '.g:nvimux_prefix.'l '.g:nvimux_terminal_quit.'<C-w><C-l>'
-  exec 'tnoremap '.g:nvimux_prefix.'o '.g:nvimux_terminal_quit.'<C-w>w'
+  call s:nvimux_bind_key_term(':', ':')
+  call s:nvimux_bind_key_term('[', '')
+  call s:nvimux_bind_key_term('h', '<C-w><C-h>')
+  call s:nvimux_bind_key_term('j', '<C-w><C-j>')
+  call s:nvimux_bind_key_term('k', '<C-w><C-k>')
+  call s:nvimux_bind_key_term('l', '<C-w><C-l>')
+  call s:nvimux_bind_key_term('o', '<C-w>w')
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    exec 'tnoremap '.g:nvimux_prefix.i.' 'g:nvimux_terminal_quit.i.'gt'
+    call s:nvimux_bind_key_term(i, i.'gt')
   endfor
 
-  exec 'tnoremap '.g:nvimux_prefix.'n '.g:nvimux_terminal_quit.'gt'
-  exec 'tnoremap '.g:nvimux_prefix.'p '.g:nvimux_terminal_quit.'gT'
+  call s:nvimux_bind_key_term('n', 'gt')
+  call s:nvimux_bind_key_term('p', 'gT')
 
 endfunction
 
