@@ -47,7 +47,7 @@ function! s:nvimux_define_terminal_bindings()
   exec 'tnoremap '.g:nvimux_prefix.'o '.g:nvimux_terminal_quit.'<C-w>w'
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    exec 'nnoremap '.g:nvimux_prefix.i.' 'g:nvimux_terminal_quit.i.'gt'
+    exec 'tnoremap '.g:nvimux_prefix.i.' 'g:nvimux_terminal_quit.i.'gt'
   endfor
 
   exec 'tnoremap '.g:nvimux_prefix.'n '.g:nvimux_terminal_quit.'gt'
