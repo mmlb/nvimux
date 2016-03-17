@@ -10,6 +10,8 @@ function! s:nvimux_bind_key(k, v, modes) abort
   for m in a:modes
     if m == 't'
       let cmd = g:nvimux_terminal_quit.a:v
+    elseif m == 'i'
+      let cmd = '<ESC>'.a:v
     else
       let cmd = a:v
     endif
