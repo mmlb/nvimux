@@ -24,7 +24,7 @@ To open a terminal with `<prefix>-c` instead of a new, empty screen, you can `le
 Terminal Provider
 -----------------
 
-If you have `neoterm` installed, it will be used.
+If you have `neoterm` installed, it will be used. Make sure `neoterm` is loaded before `nvimux`.
 `neoterm` was a hard dependency before, but now it will fall back to default neovim `terminal`.
 
 The only current problem with this is that there is no 'toggling' for terminals opened without neoterm.
