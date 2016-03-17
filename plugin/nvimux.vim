@@ -37,4 +37,14 @@ if !exists('$TMUX')
   call s:nvimux_bind_key('X', ':bd %<CR>', ['n', 'v', 'i', 't'])
 
   call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('h', '<C-w><C-h>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('j', '<C-w><C-j>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('k', '<C-w><C-k>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('l', '<C-w><C-l>', ['n', 'v', 'i', 't'])
+
+  call s:nvimux_bind_key(':', ':', ['t'])
+  call s:nvimux_bind_key('[', '', ['t'])
+  "
+  " TODO check if can force only on terminal buffer
+  call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i'])
 endif
