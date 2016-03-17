@@ -13,7 +13,7 @@ if exists('g:neoterm')
   let s:nvimux_toggle_term='Ttoggle'
 else
   let s:nvimux_new_term='term'
-  let s:nvimux_close_term='term'
+  let s:nvimux_close_term='x'
   "TODO toggle term
   let s:nvimux_toggle_term=''
 endif
