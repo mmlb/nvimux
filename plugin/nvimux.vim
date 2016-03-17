@@ -9,9 +9,9 @@ endif
 function! s:nvimux_bind_key(k, v, modes) abort
   for m in a:modes
     if m == 't'
-      let cmd = a:v
-    else
       let cmd = g:nvimux_terminal_quit.a:v
+    else
+      let cmd = a:v
     endif
     exec m.'noremap '.g:nvimux_prefix.a:k." ".cmd
   endfor
@@ -44,7 +44,7 @@ if !exists('$TMUX')
 
   call s:nvimux_bind_key(':', ':', ['t'])
   call s:nvimux_bind_key('[', '', ['t'])
-  "
+
   " TODO check if can force only on terminal buffer
   call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i'])
 endif
