@@ -41,6 +41,7 @@ if !exists('$TMUX')
     call s:nvimux_bind_key('c', ':tabe<CR>', ['n', 'v', 'i', 't'])
   endif
 
+  call s:nvimux_bind_key('<C-r>', ':so $MYVIMRC<CR>', ['n', 'v', 'i'])
   call s:nvimux_bind_key('!', ':tabe %<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('%', ':vspl<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('"', ':spl<CR>', ['n', 'v', 'i', 't'])
