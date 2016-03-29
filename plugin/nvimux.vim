@@ -7,15 +7,45 @@ if !exists('g:nvimux_terminal_quit')
 endif
 
 " Use neoterm
-if exists('g:neoterm')
+if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
   let s:nvimux_new_term='Tnew'
   let s:nvimux_close_term='Tclose'
   let s:nvimux_toggle_term='Ttoggle'
 else
+  let s:nvimux_last_buffer_id = 0
+
+  if !exists('g:nvimux_toggle_direction')
+    let g:nvimux_toggle_direction = 'botright'
+  endif
+
+  if !exists('g:nvimux_toggle_orientation')
+    let g:nvimux_toggle_orientation = 'vertical'
+  endif
+
+  if !exists('g:nvimux_toggle_size')
+    let g:nvimux_toggle_size = ''
+  endif
+
+  let s:nvimux_split_type = g:nvimux_toggle_direction.' '.g:nvimux_toggle_orientation.' '.g:nvimux_toggle_size.'split'
+
+  function! Nvimux_toggle_term_func() abort
+    if !s:nvimux_last_buffer_id
+      exec s:nvimux_split_type." | terminal"
+      let s:nvimux_last_buffer_id = bufnr('%')
+    else
+      let wbuff = bufwinnr(s:nvimux_last_buffer_id)
+      if wbuff == -1
+        exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
+      else
+        exec wbuff.' wincmd w'
+        q
+      endif
+    endif
+  endfunction
+
   let s:nvimux_new_term='term'
   let s:nvimux_close_term='x'
-  "TODO toggle term
-  let s:nvimux_toggle_term=''
+  let s:nvimux_toggle_term='call Nvimux_toggle_term_func()'
 endif
 
 function! s:nvimux_bind_key(k, v, modes) abort
