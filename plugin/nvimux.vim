@@ -34,9 +34,15 @@ else
       set wfw
       let s:nvimux_last_buffer_id = bufnr('%')
     else
-      let wbuff = bufwinnr(s:nvimux_last_buffer_id)
+        let wbuff = bufwinnr(s:nvimux_last_buffer_id)
       if wbuff == -1
+      try
         exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
+      catch E86
+        terminal
+        set wfw
+        let s:nvimux_last_buffer_id = bufnr('%')
+      endtry
         set wfw
       else
         exec wbuff.' wincmd w'
