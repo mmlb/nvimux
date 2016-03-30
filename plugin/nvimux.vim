@@ -31,11 +31,13 @@ else
   function! Nvimux_toggle_term_func() abort
     if !s:nvimux_last_buffer_id
       exec s:nvimux_split_type." | terminal"
+      set wfw
       let s:nvimux_last_buffer_id = bufnr('%')
     else
       let wbuff = bufwinnr(s:nvimux_last_buffer_id)
       if wbuff == -1
         exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
+        set wfw
       else
         exec wbuff.' wincmd w'
         q
