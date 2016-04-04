@@ -40,7 +40,6 @@ g:nvimux_prefix                              *nvimux_prefix* *g:nvimux_prefix*
                   Allows a different shortcut to nvimux commands.
                   Defaults to >
                     let g:nvimux_prefix='<C-b>'
-                  <
 
 g:nvimux_no_neoterm                  *nvimux_no_neoterm* *g:nvimux_no_neoterm*
                   Nvimux uses neoterm if available by default. If this var is
@@ -54,21 +53,18 @@ g:nvimux_toggle_direction                         *g:nvimux_toggle_direction*
                   Only available if not using neoterm.
                   Defaults to >
                     let g:nvimux_toggle_direction = 'botright'
-                  <
 
 g:nvimux_toggle_orientation                     *g:nvimux_toggle_orientation*
                   Specifies the orientation to open the scratchpad terminal.
                   Only available if not using neoterm.
                   Defaults to >
                     let g:nvimux_toggle_orientation = 'vertical'
-                  <
 
 g:nvimux_toggle_size                                   *g:nvimux_toggle_size*
                   Specifies the size of the scratchpad terminal.
                   Only available if not using neoterm.
                   Defaults to >
                     let g:nvimux_toggle_size = ''
-                  <
 
 g:nvimux_open_term_by_default                 *g:nvimux_open_term_by_default*
                   If set, |nvimux_prefix|c will open a terminal instead of an
@@ -79,7 +75,6 @@ g:nvimux_override_{command}                            *g:nvimux_toggle_size*
                   Allows overriding commands with custom commands:
                   Example >
                     let g:nvimux_override_c = 'echomsg "Open new tab" | tabe'
-                  <
 
 =============================================================================
 Credits                                                      *nvimux-credits*
