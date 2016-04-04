@@ -57,13 +57,20 @@ else
 endif
 
 function! s:nvimux_bind_key(k, v, modes) abort
+
+  if exists("g:nvimux_override_".a:k)
+    exec "let p_cmd = g:nvimux_override_".a:k
+  else
+    let p_cmd = a:v
+  endif
+
   for m in a:modes
     if m == 't'
-      let cmd = g:nvimux_terminal_quit.a:v
+      let cmd = g:nvimux_terminal_quit.p_cmd
     elseif m == 'i'
-      let cmd = '<ESC>'.a:v
+      let cmd = '<ESC>'.p_cmd
     else
-      let cmd = a:v
+      let cmd = p_cmd
     endif
     exec m.'noremap '.g:nvimux_prefix.a:k." ".cmd
   endfor
