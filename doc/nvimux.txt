@@ -76,6 +76,22 @@ g:nvimux_override_{command}                            *g:nvimux_toggle_size*
                   Example >
                     let g:nvimux_override_c = 'echomsg "Open new tab" | tabe'
 
+g:nvimux_custom_bindings                               *g:nvimux_toggle_size*
+                  Allows custom bindings using nvimux's bind function.
+                  Takes a list with three parameters:
+                    key => Key to be set after <prefix>
+                    command => the command to be used with the binding
+                    modes => for which modes it will be valid. Supports:
+                      'n' => Normal Mode
+                      'v' => Visual Mode
+                      'i' => Insert Mode; Prefixes command with '<ESC>'
+                      't' => Terminal Mode' Prefixes with <C-\><C-n>
+                  Example >
+                    let g:nvimux_custom_bindings = [
+                      \['s', ':sp<CR>', ['n', 'v', 'i', 't']],
+                      \['v', ':vs<CR>', ['n', 'v', 'i', 't']]
+                    \]
+
 =============================================================================
 Credits                                                      *nvimux-credits*
 

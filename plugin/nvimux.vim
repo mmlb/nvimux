@@ -56,26 +56,27 @@ else
   let s:nvimux_toggle_term='call Nvimux_toggle_term_func()'
 endif
 
-function! s:nvimux_bind_key(k, v, modes) abort
-
-  if exists("g:nvimux_override_".a:k)
-    exec "let p_cmd = g:nvimux_override_".a:k
-  else
-    let p_cmd = a:v
-  endif
-
+function! s:nvimux_raw_bind(k, v, modes) abort
   for m in a:modes
     if m == 't'
-      let cmd = g:nvimux_terminal_quit.p_cmd
+      let cmd = g:nvimux_terminal_quit.a:v
     elseif m == 'i'
-      let cmd = '<ESC>'.p_cmd
+      let cmd = '<ESC>'.a:v
     else
-      let cmd = p_cmd
+      let cmd = a:v
     endif
     exec m.'noremap '.g:nvimux_prefix.a:k." ".cmd
   endfor
 endfunction
 
+function! s:nvimux_bind_key(k, v, modes) abort
+  if exists("g:nvimux_override_".a:k)
+    exec "let p_cmd = "g:nvimux_override_".a:k
+    call s:nvimux_raw_bind(a:k, p_cmd, a:modes)
+  else
+    call s:nvimux_raw_bind(a:k, a:v, a:modes)
+  endif
+endfunction
 
 if !exists('$TMUX')
 
@@ -117,4 +118,10 @@ if !exists('$TMUX')
 
   " TODO check if can force only on terminal buffer
   call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i'])
+
+  if exists("g:nvimux_custom_bindings")
+    for b in g:nvimux_custom_bindings
+      call s:nvimux_raw_bind(b[0], b[1], b[2])
+    endfor
+  endif
 endif
