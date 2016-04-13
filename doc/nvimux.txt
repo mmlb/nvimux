@@ -71,12 +71,12 @@ g:nvimux_open_term_by_default                 *g:nvimux_open_term_by_default*
                   empty buffer.
                   Is not set by default.
 
-g:nvimux_override_{command}                            *g:nvimux_toggle_size*
+g:nvimux_override_{command}                        *g:nvomux_override_command*
                   Allows overriding commands with custom commands:
                   Example >
                     let g:nvimux_override_c = 'echomsg "Open new tab" | tabe'
 
-g:nvimux_custom_bindings                               *g:nvimux_toggle_size*
+g:nvimux_custom_bindings                            *g:nvimux_custom_bindings*
                   Allows custom bindings using nvimux's bind function.
                   Takes a list with three parameters:
                     key => Key to be set after <prefix>
@@ -91,6 +91,17 @@ g:nvimux_custom_bindings                               *g:nvimux_toggle_size*
                       \['s', ':sp<CR>', ['n', 'v', 'i', 't']],
                       \['v', ':vs<CR>', ['n', 'v', 'i', 't']]
                     \]
+
+g:nvimux_vertical_split                              *g:nvimux_vertical_split*
+                  Determines how nvimux splits vertically.
+                  Defaults to >
+                    let g:nvimux_vertical_split = ':vspl\|wincmd l\|enew<CR>'
+
+g:nvimux_horizontal_split                          *g:nvimux_horizontal_split*
+                  Determines how nvimux splits horizontally.
+                  Defaults to >
+                    let g:nvimux_horizontal_split = ':spl\|wincmd j\|enew<CR>'
+
 
 =============================================================================
 Credits                                                      *nvimux-credits*
