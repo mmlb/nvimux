@@ -78,6 +78,9 @@ function! s:nvimux_bind_key(k, v, modes) abort
   endif
 endfunction
 
+let g:nvimux_vertical_split = ':vspl\|wincmd l\|enew<CR>'
+let g:nvimux_horizontal_split = ':spl\|wincmd j\|enew<CR>'
+
 if !exists('$TMUX')
 
   if exists('g:nvimux_open_term_by_default')
@@ -89,8 +92,8 @@ if !exists('$TMUX')
 
   call s:nvimux_bind_key('<C-r>', ':so $MYVIMRC<CR>', ['n', 'v', 'i'])
   call s:nvimux_bind_key('!', ':tabe %<CR>', ['n', 'v', 'i', 't'])
-  call s:nvimux_bind_key('%', ':vspl\|wincmd l\|enew<CR>', ['n', 'v', 'i', 't'])
-  call s:nvimux_bind_key('"', ':spl\|wincmd j\|enew<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('%', g:nvimux_vertical_split , ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('"', g:nvimux_horizontal_split, ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('q', ':'.s:nvimux_toggle_term.'<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('w', ':tabs<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('o', '<C-w>w', ['n', 'v', 'i', 't'])
