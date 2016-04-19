@@ -1,14 +1,17 @@
 function! s:defn(var, val)
 if !exists(a:var)
-  exec 'let '.a:var.'='.a:val
+  exec 'let '.a:var."='".a:val."'"
 endif
 
 endfunction
 
 call s:defn('g:nvimux_prefix', '<C-b>')
 call s:defn('g:nvimux_terminal_quit', '<C-\><C-n>')
-call s:defn('g:nvimux_vertical_split', ':vspl\|wincmd l\|enew<CR>')
-call s:defn('g:nvimux_horizontal_split', ':spl\|wincmd j\|enew<CR>')
+call s:defn('g:nvimux_vertical_split', ':NvimuxVerticalSplit<CR>')
+call s:defn('g:nvimux_horizontal_split', ':NvimuxHorizontalSplit<CR>')
+
+command! NvimuxVerticalSplit vspl|wincmd l|enew
+command! NvimuxHorizontalSplit spl|wincmd j|enew
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
@@ -61,7 +64,7 @@ function! s:nvimux_raw_bind(k, v, modes) abort
     else
       let cmd = a:v
     endif
-    exec m.'noremap '.g:nvimux_prefix.a:k." ".cmd
+    exec m.'noremap <silent> '.g:nvimux_prefix.a:k." ".cmd
   endfor
 endfunction
 
