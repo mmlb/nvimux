@@ -6,7 +6,7 @@ function! s:defn(var, val)
 endfunction
 
 function! s:term_only(cmd)
-  if(expand('%:p') =~ 'term://')
+  if(&buftype == "terminal")
     exec a:cmd
   else
     echomsg "Not on terminal"
@@ -38,22 +38,24 @@ else
 
   let s:nvimux_split_type = g:nvimux_toggle_direction.' '.g:nvimux_toggle_orientation.' '.g:nvimux_toggle_size.'split'
 
+  function! s:nvimux_new_toggle_term() abort
+    exec s:nvimux_split_type." | terminal"
+    set wfw
+    let s:nvimux_last_buffer_id = bufnr('%')
+  endfunction
+
   function! Nvimux_toggle_term_func() abort
     if !s:nvimux_last_buffer_id
-      exec s:nvimux_split_type." | terminal"
-      set wfw
-      let s:nvimux_last_buffer_id = bufnr('%')
+      call s:nvimux_new_toggle_term()
     else
-        let wbuff = bufwinnr(s:nvimux_last_buffer_id)
+      let wbuff = bufwinnr(s:nvimux_last_buffer_id)
       if wbuff == -1
-      try
-        exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
-      catch E86
-        terminal
-        set wfw
-        let s:nvimux_last_buffer_id = bufnr('%')
-      endtry
-        set wfw
+        if bufname(s:nvimux_last_buffer_id) == ""
+          call s:nvimux_new_toggle_term()
+        else
+          exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
+          set wfw
+        endif
       else
         exec wbuff.' wincmd w'
         q
