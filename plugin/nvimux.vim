@@ -19,10 +19,10 @@ call s:defn('g:nvimux_vertical_split', ':NvimuxVerticalSplit<CR>')
 call s:defn('g:nvimux_horizontal_split', ':NvimuxHorizontalSplit<CR>')
 
 " Commands
-command! NvimuxVerticalSplit vspl|wincmd l|enew
-command! NvimuxHorizontalSplit spl|wincmd j|enew
-command! NvimuxTermPaste call s:term_only("normal pa")
-command! NvimuxToggleTerm call Nvimux_toggle_term_func()
+command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
+command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
+command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
+command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func()
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
