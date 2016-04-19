@@ -26,6 +26,7 @@ command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func()
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
+  echomsg "Nvimux: Neoterm support will be dropped in the future. Consider trying native terminal."
   let s:nvimux_new_term='Tnew'
   let s:nvimux_close_term='Tclose'
   let s:nvimux_toggle_term='Ttoggle'
