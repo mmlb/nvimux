@@ -4,6 +4,7 @@
 CONTENTS                                                        *nvimux-help*
 
   Introduction............................|nvimux-introduction|
+  Awesomeness.............................|nvimux-awesomeness|
   Commands................................|nvimux-commands|
   Customizing.............................|nvimux-customizing|
   Credits.................................|nvimux-credits|
@@ -18,17 +19,35 @@ Most of the common commands should be implemented and it should be no trouble
 setting up new commands in case you miss something
 
 =============================================================================
-Commands                                                    *nvimux-commands*
+Awesomeness                                              *nvimux-awesomeness*
 
-Nvimux implements TMUX commands as aliases to neovim commands.
+Nvimux implements TMUX commands as aliases to neovim commands, as well as
+some interesting features such as a customizable toggleable term.
 
-Please refer to the source for now, will properly document later.
+Below are some of the awesome stuff implemented here that are not natively
+implemented in tmux.
 
 Quick Terminal                               *nvimux_quick-term* *quick-term*
                   Nvimux allows a quick terminal to be available through all
                   tabs through the shortcut |nvimux-prefix|q. It will open
                   the same shared terminal on all windows. If using |neoterm|,
                   will make use of |Ttoggle|.
+
+=============================================================================
+Commands                                                    *nvimux-commands*
+
+Nvimux provides some commands for you to reuse its logic allowing even
+further customization.
+
+NvimuxVerticalSplit                                     *NvimuxVerticalSplit*
+                  Simple alias for quick vertical window splitting.
+                  Defined as >
+                    command! NvimuxVerticalSplit vspl|wincmd l|enew
+
+NvimuxHorizontalSplit                                 *NvimuxHorizontalSplit*
+                  Simple alias for quick horizontal window splitting.
+                  Defined as >
+                    command! NvimuxHorizontalSplit spl|wincmd j|enew
 
 =============================================================================
 Customizing                                              *nvimux-customizing*
@@ -95,12 +114,12 @@ g:nvimux_custom_bindings                            *g:nvimux_custom_bindings*
 g:nvimux_vertical_split                              *g:nvimux_vertical_split*
                   Determines how nvimux splits vertically.
                   Defaults to >
-                    let g:nvimux_vertical_split = ':vspl\|wincmd l\|enew<CR>'
+                    let g:nvimux_vertical_split = ':NvimuxVerticalSplit<CR>'
 
 g:nvimux_horizontal_split                          *g:nvimux_horizontal_split*
                   Determines how nvimux splits horizontally.
                   Defaults to >
-                    let g:nvimux_horizontal_split = ':spl\|wincmd j\|enew<CR>'
+                    let g:nvimux_horizontal_split = ':NvimuxHorizontalSplit<CR>'
 
 
 =============================================================================
