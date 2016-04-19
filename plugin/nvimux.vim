@@ -1,10 +1,14 @@
-if !exists('g:nvimux_prefix')
-  let g:nvimux_prefix='<C-b>'
+function! s:defn(var, val)
+if !exists(a:var)
+  exec 'let '.a:var.'='.a:val
 endif
 
-if !exists('g:nvimux_terminal_quit')
-  let g:nvimux_terminal_quit='<C-\><C-n>'
-endif
+endfunction
+
+call s:defn('g:nvimux_prefix', '<C-b>')
+call s:defn('g:nvimux_terminal_quit', '<C-\><C-n>')
+call s:defn('g:nvimux_vertical_split', ':vspl\|wincmd l\|enew<CR>')
+call s:defn('g:nvimux_horizontal_split', ':spl\|wincmd j\|enew<CR>')
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
@@ -14,17 +18,9 @@ if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
 else
   let s:nvimux_last_buffer_id = 0
 
-  if !exists('g:nvimux_toggle_direction')
-    let g:nvimux_toggle_direction = 'botright'
-  endif
-
-  if !exists('g:nvimux_toggle_orientation')
-    let g:nvimux_toggle_orientation = 'vertical'
-  endif
-
-  if !exists('g:nvimux_toggle_size')
-    let g:nvimux_toggle_size = ''
-  endif
+  call s:defn('g:nvimux_toggle_direction', 'botright')
+  call s:defn('g:nvimux_toggle_orientation', 'vertical')
+  call s:defn('g:nvimux_toggle_size', '')
 
   let s:nvimux_split_type = g:nvimux_toggle_direction.' '.g:nvimux_toggle_orientation.' '.g:nvimux_toggle_size.'split'
 
@@ -77,9 +73,6 @@ function! s:nvimux_bind_key(k, v, modes) abort
     call s:nvimux_raw_bind(a:k, a:v, a:modes)
   endif
 endfunction
-
-let g:nvimux_vertical_split = ':vspl\|wincmd l\|enew<CR>'
-let g:nvimux_horizontal_split = ':spl\|wincmd j\|enew<CR>'
 
 if !exists('$TMUX')
 
