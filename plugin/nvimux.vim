@@ -1,8 +1,16 @@
+" Private/Local functions
 function! s:defn(var, val)
-if !exists(a:var)
-  exec 'let '.a:var."='".a:val."'"
-endif
+  if !exists(a:var)
+    exec 'let '.a:var."='".a:val."'"
+  endif
+endfunction
 
+function! s:term_only(cmd)
+  if(expand('%:p') =~ 'term://')
+    exec a:cmd
+  else
+    echomsg "Not on terminal"
+  endif
 endfunction
 
 call s:defn('g:nvimux_prefix', '<C-b>')
@@ -10,8 +18,11 @@ call s:defn('g:nvimux_terminal_quit', '<C-\><C-n>')
 call s:defn('g:nvimux_vertical_split', ':NvimuxVerticalSplit<CR>')
 call s:defn('g:nvimux_horizontal_split', ':NvimuxHorizontalSplit<CR>')
 
+" Commands
 command! NvimuxVerticalSplit vspl|wincmd l|enew
 command! NvimuxHorizontalSplit spl|wincmd j|enew
+command! NvimuxTermPaste call s:term_only("normal pa")
+command! NvimuxToggleTerm call Nvimux_toggle_term_func()
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
@@ -52,9 +63,10 @@ else
 
   let s:nvimux_new_term='term'
   let s:nvimux_close_term='x'
-  let s:nvimux_toggle_term='call Nvimux_toggle_term_func()'
+  let s:nvimux_toggle_term='NvimuxToggleTerm'
 endif
 
+" Binding functions
 function! s:nvimux_raw_bind(k, v, modes) abort
   for m in a:modes
     if m == 't'
@@ -77,6 +89,7 @@ function! s:nvimux_bind_key(k, v, modes) abort
   endif
 endfunction
 
+" TMUX emulation itself
 if !exists('$TMUX')
 
   if exists('g:nvimux_open_term_by_default')
@@ -104,19 +117,16 @@ if !exists('$TMUX')
   call s:nvimux_bind_key('x', ':x<CR>', ['n', 'v', 'i'])
   call s:nvimux_bind_key('X', ':bd %<CR>', ['n', 'v', 'i'])
 
-  call s:nvimux_bind_key('x', ':'.s:nvimux_close_term.'<CR>', ['t'])
-
-  call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('h', '<C-w><C-h>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('j', '<C-w><C-j>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('k', '<C-w><C-k>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('l', '<C-w><C-l>', ['n', 'v', 'i', 't'])
 
+  " term specific stuff
   call s:nvimux_bind_key(':', ':', ['t'])
   call s:nvimux_bind_key('[', '', ['t'])
-
-  " TODO check if can force only on terminal buffer
-  call s:nvimux_bind_key(']', 'pa', ['n', 'v', 'i'])
+  call s:nvimux_bind_key(']', ':NvimuxTermPaste<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('x', ':'.s:nvimux_close_term.'<CR>', ['t'])
 
   if exists("g:nvimux_custom_bindings")
     for b in g:nvimux_custom_bindings
