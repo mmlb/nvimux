@@ -23,6 +23,7 @@ command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
 command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
 command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func()
+command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
@@ -92,6 +93,14 @@ function! s:nvimux_bind_key(k, v, modes) abort
   endif
 endfunction
 
+function! NvimuxInteractiveTermRename() abort
+  call inputsave()
+  let term_name = input("nvimux > New term name: ")
+  call inputrestore()
+  redraw
+  exec 'NvimuxTermRename '.term_name
+endfunction
+
 " TMUX emulation itself
 if !exists('$TMUX')
 
@@ -129,6 +138,7 @@ if !exists('$TMUX')
   call s:nvimux_bind_key(':', ':', ['t'])
   call s:nvimux_bind_key('[', '', ['t'])
   call s:nvimux_bind_key(']', ':NvimuxTermPaste<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key(',', ':call NvimuxInteractiveTermRename()<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('x', ':'.s:nvimux_close_term.'<CR>', ['t'])
 
   if exists("g:nvimux_custom_bindings")
