@@ -64,6 +64,7 @@ Functions                                                  *nvimux-functions*
 
 NvimuxToggleTermFunc(scope)                            *NvimuxToggleTermFunc*
                   Toggles a quickterm according to supplied scope.
+                  Only available when using native terminal implementation.
                   Takes a scope as a scope as argument.
 
 NvimuxInteractiveTermRename()                   *NvimuxInteractiveTermRename*
