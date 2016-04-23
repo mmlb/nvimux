@@ -17,12 +17,13 @@ call s:defn('g:nvimux_prefix', '<C-b>')
 call s:defn('g:nvimux_terminal_quit', '<C-\><C-n>')
 call s:defn('g:nvimux_vertical_split', ':NvimuxVerticalSplit<CR>')
 call s:defn('g:nvimux_horizontal_split', ':NvimuxHorizontalSplit<CR>')
+call s:defn('g:nvimux_quickterm_scope', 'g')
 
 " Commands
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
 command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
-command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func()
+command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func(g:nvimux_quickterm_scope)
 command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
 
 " Use neoterm
@@ -32,38 +33,11 @@ if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
   let s:nvimux_close_term='Tclose'
   let s:nvimux_toggle_term='Ttoggle'
 else
-  let s:nvimux_last_buffer_id = 0
-
   call s:defn('g:nvimux_toggle_direction', 'botright')
   call s:defn('g:nvimux_toggle_orientation', 'vertical')
   call s:defn('g:nvimux_toggle_size', '')
 
   let s:nvimux_split_type = g:nvimux_toggle_direction.' '.g:nvimux_toggle_orientation.' '.g:nvimux_toggle_size.'split'
-
-  function! s:nvimux_new_toggle_term() abort
-    exec s:nvimux_split_type." | terminal"
-    set wfw
-    let s:nvimux_last_buffer_id = bufnr('%')
-  endfunction
-
-  function! Nvimux_toggle_term_func() abort
-    if !s:nvimux_last_buffer_id
-      call s:nvimux_new_toggle_term()
-    else
-      let wbuff = bufwinnr(s:nvimux_last_buffer_id)
-      if wbuff == -1
-        if bufname(s:nvimux_last_buffer_id) == ""
-          call s:nvimux_new_toggle_term()
-        else
-          exec s:nvimux_split_type." | ".'b'.s:nvimux_last_buffer_id
-          set wfw
-        endif
-      else
-        exec wbuff.' wincmd w'
-        q
-      endif
-    endif
-  endfunction
 
   let s:nvimux_new_term='term'
   let s:nvimux_close_term='x'
@@ -100,6 +74,41 @@ function! NvimuxInteractiveTermRename() abort
   redraw
   exec 'NvimuxTermRename '.term_name
 endfunction
+
+function! s:nvimux_get_last_buffer_id(scope) abort
+  exec "let s:tmp = ".a:scope.":nvimux_last_buffer_id"
+  return s:tmp
+endfunction
+
+function! s:nvimux_set_last_buffer_id(scope, value) abort
+  exec "let ".a:scope.":nvimux_last_buffer_id = ".a:value
+endfunction
+
+function! s:nvimux_new_toggle_term(scope) abort
+  exec s:nvimux_split_type." | terminal"
+  set wfw
+  call s:nvimux_set_last_buffer_id(a:scope, bufnr('%'))
+endfunction
+
+function! Nvimux_toggle_term_func(scope) abort
+  if !exists(a:scope.":nvimux_last_buffer_id") || !s:nvimux_get_last_buffer_id(a:scope)
+    call s:nvimux_new_toggle_term(a:scope)
+  else
+    let wbuff = bufwinnr(s:nvimux_get_last_buffer_id(a:scope))
+    if wbuff == -1
+      if bufname(s:nvimux_get_last_buffer_id(a:scope)) == ""
+        call s:nvimux_new_toggle_term(a:scope)
+      else
+        exec s:nvimux_split_type." | ".'b'.s:nvimux_get_last_buffer_id(a:scope)
+        set wfw
+      endif
+    else
+      exec wbuff.' wincmd w'
+      q
+    endif
+  endif
+endfunction
+
 
 " TMUX emulation itself
 if !exists('$TMUX')
