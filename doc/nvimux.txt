@@ -146,10 +146,10 @@ g:nvimux_horizontal_split                          *g:nvimux_horizontal_split*
 g:nvimux_quickterm_scope                            *g:nvimux_quickterm_scope*
                   Allows to set quickterm to be global or tab-local.
                   Defaults to >
-                    let :nvimux_quickterm_scope = 'g'
+                    let g:nvimux_quickterm_scope = 'g'
 
                   Tab-local config >
-                    let :nvimux_quickterm_scope = 't'
+                    let g:nvimux_quickterm_scope = 't'
 
 ==============================================================================
 Credits                                                       *nvimux-credits*
