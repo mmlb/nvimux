@@ -23,7 +23,7 @@ call s:defn('g:nvimux_quickterm_scope', 'g')
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
 command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
-command! -nargs=0 NvimuxToggleTerm call Nvimux_toggle_term_func(g:nvimux_quickterm_scope)
+command! -nargs=0 NvimuxToggleTerm call NvimuxToggleTermFunc(g:nvimux_quickterm_scope)
 command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
 
 " Use neoterm
@@ -67,14 +67,6 @@ function! s:nvimux_bind_key(k, v, modes) abort
   endif
 endfunction
 
-function! NvimuxInteractiveTermRename() abort
-  call inputsave()
-  let term_name = input("nvimux > New term name: ")
-  call inputrestore()
-  redraw
-  exec 'NvimuxTermRename '.term_name
-endfunction
-
 function! s:nvimux_get_last_buffer_id(scope) abort
   exec "let s:tmp = ".a:scope.":nvimux_last_buffer_id"
   return s:tmp
@@ -90,7 +82,16 @@ function! s:nvimux_new_toggle_term(scope) abort
   call s:nvimux_set_last_buffer_id(a:scope, bufnr('%'))
 endfunction
 
-function! Nvimux_toggle_term_func(scope) abort
+" Public Functions
+function! NvimuxInteractiveTermRename() abort
+  call inputsave()
+  let term_name = input("nvimux > New term name: ")
+  call inputrestore()
+  redraw
+  exec 'NvimuxTermRename '.term_name
+endfunction
+
+function! NvimuxToggleTermFunc(scope) abort
   if !exists(a:scope.":nvimux_last_buffer_id") || !s:nvimux_get_last_buffer_id(a:scope)
     call s:nvimux_new_toggle_term(a:scope)
   else
@@ -108,7 +109,6 @@ function! Nvimux_toggle_term_func(scope) abort
     endif
   endif
 endfunction
-
 
 " TMUX emulation itself
 if !exists('$TMUX')

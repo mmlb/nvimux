@@ -6,6 +6,7 @@ CONTENTS                                                        *nvimux-help*
   Introduction............................|nvimux-introduction|
   Awesomeness.............................|nvimux-awesomeness|
   Commands................................|nvimux-commands|
+  Functions...............................|nvimux-functions|
   Customizing.............................|nvimux-customizing|
   Credits.................................|nvimux-credits|
 
@@ -41,13 +42,34 @@ further customization.
 
 NvimuxVerticalSplit                                     *NvimuxVerticalSplit*
                   Simple alias for quick vertical window splitting.
-                  Defined as >
-                    command! NvimuxVerticalSplit vspl|wincmd l|enew
 
 NvimuxHorizontalSplit                                 *NvimuxHorizontalSplit*
                   Simple alias for quick horizontal window splitting.
-                  Defined as >
-                    command! NvimuxHorizontalSplit spl|wincmd j|enew
+
+NvimuxTermPaste                                             *NvimuxTermPaste*
+                  Paste contents into terminal.
+                  Only available if current buffer is a terminal.
+
+NvimuxToggleTerm                                           *NvimuxToggleTerm*
+                  Toggle quickterm using global config for quickterm scope.
+                  Behavior can be set at {g:nvimux_quickterm_scope}.
+
+NvimuxTermRename new-term-name                             *NvimuxTermRename*
+                  Renames current term buffer to supplied argument name.
+                  Only available if current buffer is a terminal.
+
+
+=============================================================================
+Functions                                                  *nvimux-functions*
+
+NvimuxToggleTermFunc(scope)                            *NvimuxToggleTermFunc*
+                  Toggles a quickterm according to supplied scope.
+                  Takes a scope as a scope as argument.
+
+NvimuxInteractiveTermRename()                   *NvimuxInteractiveTermRename*
+                  Prompts the user for a new name for current terminal.
+                  Calls command {NvimuxTermRename} with supplied new terminal
+                  name.
 
 =============================================================================
 Customizing                                              *nvimux-customizing*
@@ -121,9 +143,16 @@ g:nvimux_horizontal_split                          *g:nvimux_horizontal_split*
                   Defaults to >
                     let g:nvimux_horizontal_split = ':NvimuxHorizontalSplit<CR>'
 
+g:nvimux_quickterm_scope                            *g:nvimux_quickterm_scope*
+                  Allows to set quickterm to be global or tab-local.
+                  Defaults to >
+                    let :nvimux_quickterm_scope = 'g'
 
-=============================================================================
-Credits                                                      *nvimux-credits*
+                  Tab-local config >
+                    let :nvimux_quickterm_scope = 't'
+
+==============================================================================
+Credits                                                       *nvimux-credits*
 
 Plugin created by Henry Kupty <hkupty@gmail.com>.
 It is free to use and extend. Please consider opening a pull request if
