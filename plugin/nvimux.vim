@@ -28,10 +28,17 @@ command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
 
 " Use neoterm
 if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
-  echomsg "Nvimux: Neoterm support will be dropped in the future. Consider trying native terminal."
+  let s:nvimux_has_warned_deprecation = 0
+  function! NvimuxDeprecatedToggle() abort
+      if !s:nvimux_has_warned_deprecation
+        let s:nvimux_has_warned_deprecation = 1
+        echomsg "Nvimux: Neoterm support will be dropped in the future. Consider trying native terminal."
+      endif
+      Ttoggle
+  endfunction
   let s:nvimux_new_term='Tnew'
   let s:nvimux_close_term='Tclose'
-  let s:nvimux_toggle_term='Ttoggle'
+  let s:nvimux_toggle_term='call NvimuxDeprecatedToggle()'
 else
   call s:defn('g:nvimux_toggle_direction', 'botright')
   call s:defn('g:nvimux_toggle_orientation', 'vertical')
