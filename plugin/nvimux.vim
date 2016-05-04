@@ -95,11 +95,10 @@ function! s:nvimux_new_toggle_term(scope) abort
   exec s:nvimux_split_type." | terminal"
   set wfw
   call s:nvimux_set_last_buffer_id(a:scope, bufnr('%'))
-  NvimuxTermRename Quickterm
 endfunction
 
 " Public Functions
-function! NvimuxRawToggleTerm(backing_var, create_new) abort
+function! NvimuxRawToggle(backing_var, create_new) abort
   if !exists(a:backing_var) || ! s:nvimux_get_var_value(a:backing_var)
     exec a:create_new
   else
@@ -127,7 +126,7 @@ function! NvimuxInteractiveTermRename() abort
 endfunction
 
 function! NvimuxToggleTermFunc(scope) abort
-  call NvimuxRawToggleTerm(a:scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term('".a:scope."')")
+  call NvimuxRawToggle(a:scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term('".a:scope."')")
 
 endfunction
 
