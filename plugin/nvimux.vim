@@ -74,13 +74,21 @@ function! s:nvimux_bind_key(k, v, modes) abort
   endif
 endfunction
 
-function! s:nvimux_get_last_buffer_id(scope) abort
-  exec "let s:tmp = ".a:scope.":nvimux_last_buffer_id"
+function! s:nvimux_get_var_value(var_name) abort
+  exec "let s:tmp = ".a:var_name
   return s:tmp
 endfunction
 
+function! s:nvimux_get_last_buffer_id(scope) abort
+  return s:nvimux_get_var_value(a:scope.":nvimux_last_buffer_id")
+endfunction
+
+function! s:nvimux_set_var_value(scope, var_name, value) abort
+  exec "let ".a:scope.":".a:var_name." = ".a:value
+endfunction
+
 function! s:nvimux_set_last_buffer_id(scope, value) abort
-  exec "let ".a:scope.":nvimux_last_buffer_id = ".a:value
+  call s:nvimux_set_var_value(a:scope.":nvimux_last_buffer_id", a:value)
 endfunction
 
 function! s:nvimux_new_toggle_term(scope) abort
@@ -90,6 +98,25 @@ function! s:nvimux_new_toggle_term(scope) abort
 endfunction
 
 " Public Functions
+function! NvimuxRawToggleTerm(backing_var, create_new) abort
+  if !exists(a:backing_var) || ! s:nvimux_get_var_value(a:backing_var)
+    exec a:create_new
+  else
+    let wbuff = bufwinnr(s:nvimux_get_var_value(a:backing_var))
+    if wbuff == -1
+      if bufname(s:nvimux_get_var_value(a:backing_var)) == ""
+        exec a:create_new
+      else
+        exec s:nvimux_split_type." | ".'b'.s:nvimux_get_var_value(a:backing_var)
+        set wfw
+      endif
+    else
+      exec wbuff.' wincmd w'
+      q
+    endif
+  endif
+endfunction
+
 function! NvimuxInteractiveTermRename() abort
   call inputsave()
   let term_name = input("nvimux > New term name: ")
@@ -99,22 +126,8 @@ function! NvimuxInteractiveTermRename() abort
 endfunction
 
 function! NvimuxToggleTermFunc(scope) abort
-  if !exists(a:scope.":nvimux_last_buffer_id") || !s:nvimux_get_last_buffer_id(a:scope)
-    call s:nvimux_new_toggle_term(a:scope)
-  else
-    let wbuff = bufwinnr(s:nvimux_get_last_buffer_id(a:scope))
-    if wbuff == -1
-      if bufname(s:nvimux_get_last_buffer_id(a:scope)) == ""
-        call s:nvimux_new_toggle_term(a:scope)
-      else
-        exec s:nvimux_split_type." | ".'b'.s:nvimux_get_last_buffer_id(a:scope)
-        set wfw
-      endif
-    else
-      exec wbuff.' wincmd w'
-      q
-    endif
-  endif
+  call NvimuxRawToggleTerm(a:scope.":nvimux_last_buffer_id", "s:nvimux_new_toggle_term(".a:scope.")")
+  NvimuxTermRename Quickterm
 endfunction
 
 " TMUX emulation itself
