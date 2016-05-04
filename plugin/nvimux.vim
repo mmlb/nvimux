@@ -83,8 +83,8 @@ function! s:nvimux_get_last_buffer_id(scope) abort
   return s:nvimux_get_var_value(a:scope.":nvimux_last_buffer_id")
 endfunction
 
-function! s:nvimux_set_var_value(scope, var_name, value) abort
-  exec "let ".a:scope.":".a:var_name." = ".a:value
+function! s:nvimux_set_var_value(var_name, value) abort
+  exec "let ".a:var_name." = ".a:value
 endfunction
 
 function! s:nvimux_set_last_buffer_id(scope, value) abort
@@ -95,6 +95,7 @@ function! s:nvimux_new_toggle_term(scope) abort
   exec s:nvimux_split_type." | terminal"
   set wfw
   call s:nvimux_set_last_buffer_id(a:scope, bufnr('%'))
+  NvimuxTermRename Quickterm
 endfunction
 
 " Public Functions
@@ -126,8 +127,8 @@ function! NvimuxInteractiveTermRename() abort
 endfunction
 
 function! NvimuxToggleTermFunc(scope) abort
-  call NvimuxRawToggleTerm(a:scope.":nvimux_last_buffer_id", "s:nvimux_new_toggle_term(".a:scope.")")
-  NvimuxTermRename Quickterm
+  call NvimuxRawToggleTerm(a:scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term('".a:scope."')")
+
 endfunction
 
 " TMUX emulation itself
