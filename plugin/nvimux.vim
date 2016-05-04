@@ -94,7 +94,9 @@ endfunction
 function! s:nvimux_new_toggle_term(scope) abort
   exec s:nvimux_split_type." | terminal"
   set wfw
-  call s:nvimux_set_last_buffer_id(a:scope, bufnr('%'))
+  let bufid = bufnr('%')
+  call setbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)
+  call s:nvimux_set_last_buffer_id(a:scope, bufid)
 endfunction
 
 " Public Functions
@@ -102,12 +104,13 @@ function! NvimuxRawToggle(backing_var, create_new) abort
   if !exists(a:backing_var) || ! s:nvimux_get_var_value(a:backing_var)
     exec a:create_new
   else
-    let wbuff = bufwinnr(s:nvimux_get_var_value(a:backing_var))
+    let bufid = s:nvimux_get_var_value(a:backing_var)
+    let wbuff = bufwinnr(bufid)
     if wbuff == -1
-      if bufname(s:nvimux_get_var_value(a:backing_var)) == ""
+      if bufname(bufid) == ""
         exec a:create_new
       else
-        exec s:nvimux_split_type." | ".'b'.s:nvimux_get_var_value(a:backing_var)
+        exec getbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)." | ".'b'.bufid
         set wfw
       endif
     else
