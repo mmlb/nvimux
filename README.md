@@ -25,12 +25,10 @@ In this case, opening a blank screen moves to `<prefix>-t`.
 Terminal Provider
 -----------------
 
-If you have `neoterm` installed, it will be used by default.
-If you want `nvimux` to use `neoterm`, make sure `neoterm` is loaded before `nvimux`.
+Nvimux uses default neovim terminal implementation for terminal buffers (both quickterm and terminal window).
 
-You can opt to use vim's plain terminal instead of `neoterm`.
-Just`let g:nvimux_no_neoterm = 1` and `neoterm` won't be used anymore. This is the same
-behavior you get if you don't have neoterm installed.
+One can define a different quickterm provider via `g:nvimux_quickterm_provider` and different commands for
+terminal creating/closing terminal buffers via `g:nvimux_new_term` and `g:nvimux_close_term`.
 
 ###Defining quickterm position
 
@@ -38,9 +36,9 @@ You can set specific values for orientation, direction and size with the variabl
 
 ```vim
 "This are the defaults
-let g:nvimux_toggle_direction = 'botright'
-let g:nvimux_toggle_orientation = 'vertical'
-let g:nvimux_toggle_size = ''
+let g:nvimux_quickterm_direction = 'botright'
+let g:nvimux_quickterm_orientation = 'vertical'
+let g:nvimux_quickterm_size = ''
 ```
 
 Overriding defaults
