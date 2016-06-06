@@ -62,10 +62,21 @@ NvimuxTermRename new-term-name                             *NvimuxTermRename*
 =============================================================================
 Functions                                                  *nvimux-functions*
 
-NvimuxToggleTermFunc(scope)                            *NvimuxToggleTermFunc*
-                  Toggles a quickterm according to supplied scope.
-                  Only available when using native terminal implementation.
-                  Takes a scope as a scope as argument.
+NvimuxToggleTermFunc()                                 *NvimuxToggleTermFunc*
+                  Toggles a quickterm according to nvimux quickter scope.
+                  This is set via {g:nvimux_quickterm_scope} variable.
+                  Calls function supplied via {g:nvimux_quickterm_provider},
+                  defaulting to a simple call to native terminal.
+
+NvimuxRawToggleTerm(backing_var, create_new)            *NvimuxRawToggleTerm*
+                  Allows toggling a terminal buffer, using {backing_var} to
+                  determine the state of such terminal and {create_new} to
+                  create a new terminal instance if {backing_var} is not set
+                  or returns -1.
+                  The {backing_var} variable should hold the buffer id and
+                  the supplied argument is the name of the variable along
+                  with the correct scope on which the toggleable terminal is
+                  available.
 
 NvimuxInteractiveTermRename()                   *NvimuxInteractiveTermRename*
                   Prompts the user for a new name for current terminal.
@@ -84,29 +95,38 @@ g:nvimux_prefix                              *nvimux_prefix* *g:nvimux_prefix*
                     let g:nvimux_prefix='<C-b>'
 
 g:nvimux_no_neoterm                  *nvimux_no_neoterm* *g:nvimux_no_neoterm*
-                  Nvimux uses neoterm if available by default. If this var is
-                  set, override the usage of neoterm to use plain neovim term
-                  and nvimux |quick-term|
-                  Is not set by default.
+                  This has been removed on commit 37cc7b8cdc4. Neoterm is no
+                  longer a dependency and can be integrated using
+                  {nvimux_new_term}, {nvimux_close_term} and
+                  {nvimux_quickterm_provider} variables.
 
+g:nvimux_quickterm_provider                      *g:nvimux_quickterm_provider*
+                  Specifies the function that creates a quickterm.
 
-g:nvimux_toggle_direction                         *g:nvimux_toggle_direction*
+g:nvimux_quickterm_scope                            *g:nvimux_quickterm_scope*
+                  Specifies the scope available for the quickterm.
+                  If set to global scope, the quickterm will be shared across
+                  tabs. If tab-local, each tab will have its own quickterm.
+                  Defaults to >
+                    let g:nvimux_quickterm_scope = 'g'
+
+g:nvimux_quickterm_direction                    *g:nvimux_quickterm_direction*
                   Specifies the direction to open the scratchpad terminal.
-                  Only available if not using neoterm.
+                  Relative to default quickterm logic.
                   Defaults to >
-                    let g:nvimux_toggle_direction = 'botright'
+                    let g:nvimux_quickterm_direction = 'botright'
 
-g:nvimux_toggle_orientation                     *g:nvimux_toggle_orientation*
+g:nvimux_quickterm_orientation                *g:nvimux_quickterm_orientation*
                   Specifies the orientation to open the scratchpad terminal.
-                  Only available if not using neoterm.
+                  Relative to default quickterm logic.
                   Defaults to >
-                    let g:nvimux_toggle_orientation = 'vertical'
+                    let g:nvimux_quickterm_orientation = 'vertical'
 
-g:nvimux_toggle_size                                   *g:nvimux_toggle_size*
+g:nvimux_quickterm_size                              *g:nvimux_quickterm_size*
                   Specifies the size of the scratchpad terminal.
-                  Only available if not using neoterm.
+                  Relative to default quickterm logic.
                   Defaults to >
-                    let g:nvimux_toggle_size = ''
+                    let g:nvimux_quickterm_size = ''
 
 g:nvimux_open_term_by_default                 *g:nvimux_open_term_by_default*
                   If set, |nvimux_prefix|c will open a terminal instead of an
