@@ -13,43 +13,31 @@ function! s:term_only(cmd)
   endif
 endfunction
 
+" Variables
 call s:defn('g:nvimux_prefix', '<C-b>')
 call s:defn('g:nvimux_terminal_quit', '<C-\><C-n>')
+
 call s:defn('g:nvimux_vertical_split', ':NvimuxVerticalSplit<CR>')
 call s:defn('g:nvimux_horizontal_split', ':NvimuxHorizontalSplit<CR>')
+
+call s:defn('g:nvimux_quickterm_provider', "call s:nvimux_new_toggle_term()")
 call s:defn('g:nvimux_quickterm_scope', 'g')
+call s:defn('g:nvimux_quickterm_direction', 'botright')
+call s:defn('g:nvimux_quickterm_orientation', 'vertical')
+call s:defn('g:nvimux_quickterm_size', '')
+
+call s:defn('g:nvimux_new_term', 'term')
+call s:defn('g:nvimux_close_term', 'x')
+
+
+let s:nvimux_split_type = g:nvimux_quickterm_direction.' '.g:nvimux_quickterm_orientation.' '.g:nvimux_quickterm_size.'split'
 
 " Commands
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
-command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
+command! -nargs=0 NvimuxTermPaste call s:term_only('normal pa')
 command! -nargs=0 NvimuxToggleTerm call NvimuxToggleTermFunc()
-command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
-
-" Use neoterm
-if exists('g:neoterm') && !exists('g:nvimux_no_neoterm')
-  let s:nvimux_has_warned_deprecation = 0
-  function! NvimuxDeprecatedToggle() abort
-      if !s:nvimux_has_warned_deprecation
-        let s:nvimux_has_warned_deprecation = 1
-        echomsg "Nvimux: Neoterm support will be dropped in the future. Consider trying native terminal."
-      endif
-      Ttoggle
-  endfunction
-  let s:nvimux_new_term='Tnew'
-  let s:nvimux_close_term='Tclose'
-  let s:nvimux_toggle_term='call NvimuxDeprecatedToggle()'
-else
-  call s:defn('g:nvimux_toggle_direction', 'botright')
-  call s:defn('g:nvimux_toggle_orientation', 'vertical')
-  call s:defn('g:nvimux_toggle_size', '')
-
-  let s:nvimux_split_type = g:nvimux_toggle_direction.' '.g:nvimux_toggle_orientation.' '.g:nvimux_toggle_size.'split'
-
-  let s:nvimux_new_term='term'
-  let s:nvimux_close_term='x'
-  let s:nvimux_toggle_term='NvimuxToggleTerm'
-endif
+command! -nargs=1 NvimuxTermRename call s:term_only('file term://<args>')
 
 " Binding functions
 function! s:nvimux_raw_bind(k, v, modes) abort
@@ -66,8 +54,8 @@ function! s:nvimux_raw_bind(k, v, modes) abort
 endfunction
 
 function! s:nvimux_bind_key(k, v, modes) abort
-  if exists("g:nvimux_override_".a:k)
-    exec "let p_cmd = "g:nvimux_override_".a:k
+  if exists('g:nvimux_override_'.a:k)
+    exec 'let p_cmd = 'g:nvimux_override_".a:k
     call s:nvimux_raw_bind(a:k, p_cmd, a:modes)
   else
     call s:nvimux_raw_bind(a:k, a:v, a:modes)
@@ -75,23 +63,23 @@ function! s:nvimux_bind_key(k, v, modes) abort
 endfunction
 
 function! s:nvimux_get_var_value(var_name) abort
-  exec "let s:tmp = ".a:var_name
+  exec 'let s:tmp = '.a:var_name
   return s:tmp
 endfunction
 
 function! s:nvimux_set_var_value(var_name, value) abort
-  exec "let ".a:var_name." = ".a:value
+  exec 'let '.a:var_name.' = '.a:value
 endfunction
 
 function! s:nvimux_new_toggle_term() abort
-  exec s:nvimux_split_type." | terminal"
+  exec s:nvimux_split_type.' | '.g:nvimux_new_term
   set wfw
   let bufid = bufnr('%')
-  if bufnr("Quickterm") == -1
+  if bufnr('Quickterm') == -1
     NvimuxTermRename Quickterm
   endif
   call setbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)
-  call s:nvimux_set_var_value(g:nvimux_quickterm_scope.":nvimux_last_buffer_id", bufid)
+  call s:nvimux_set_var_value(g:nvimux_quickterm_scope.':nvimux_last_buffer_id', bufid)
 endfunction
 
 " Public Functions
@@ -102,10 +90,10 @@ function! NvimuxRawToggle(backing_var, create_new) abort
     let bufid = s:nvimux_get_var_value(a:backing_var)
     let wbuff = bufwinnr(bufid)
     if wbuff == -1
-      if bufname(bufid) == ""
+      if bufname(bufid) == ''
         exec a:create_new
       else
-        exec getbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)." | ".'b'.bufid
+        exec getbufvar(bufid, 'nvimux_buf_orientation', 'split').' | b'.bufid
         set wfw
       endif
     else
@@ -124,7 +112,7 @@ function! NvimuxInteractiveTermRename() abort
 endfunction
 
 function! NvimuxToggleTermFunc() abort
-  call NvimuxRawToggle(g:nvimux_quickterm_scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term()")
+  call NvimuxRawToggle(g:nvimux_quickterm_scope.":nvimux_last_buffer_id", g:nvimux_quickterm_provider)
 endfunction
 
 " TMUX emulation itself
@@ -141,7 +129,7 @@ if !exists('$TMUX')
   call s:nvimux_bind_key('!', ':tabe %<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('%', g:nvimux_vertical_split , ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('"', g:nvimux_horizontal_split, ['n', 'v', 'i', 't'])
-  call s:nvimux_bind_key('q', ':'.s:nvimux_toggle_term.'<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('q', ':NvimuxToggleTerm<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('w', ':tabs<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('o', '<C-w>w', ['n', 'v', 'i', 't'])
 
