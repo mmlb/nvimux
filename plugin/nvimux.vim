@@ -79,16 +79,8 @@ function! s:nvimux_get_var_value(var_name) abort
   return s:tmp
 endfunction
 
-function! s:nvimux_get_last_buffer_id(scope) abort
-  return s:nvimux_get_var_value(a:scope.":nvimux_last_buffer_id")
-endfunction
-
 function! s:nvimux_set_var_value(var_name, value) abort
   exec "let ".a:var_name." = ".a:value
-endfunction
-
-function! s:nvimux_set_last_buffer_id(scope, value) abort
-  call s:nvimux_set_var_value(a:scope.":nvimux_last_buffer_id", a:value)
 endfunction
 
 function! s:nvimux_new_toggle_term(scope) abort
@@ -96,7 +88,7 @@ function! s:nvimux_new_toggle_term(scope) abort
   set wfw
   let bufid = bufnr('%')
   call setbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)
-  call s:nvimux_set_last_buffer_id(a:scope, bufid)
+  call s:nvimux_set_var_value(a:scope.":nvimux_last_buffer_id", a:value)
 endfunction
 
 " Public Functions
@@ -130,7 +122,6 @@ endfunction
 
 function! NvimuxToggleTermFunc(scope) abort
   call NvimuxRawToggle(a:scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term('".a:scope."')")
-
 endfunction
 
 " TMUX emulation itself
