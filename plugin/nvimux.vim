@@ -119,7 +119,7 @@ endfunction
 if !exists('$TMUX')
 
   if exists('g:nvimux_open_term_by_default')
-    call s:nvimux_bind_key('c', ':tabe\|'.s:nvimux_new_term.'<CR>', ['n', 'v', 'i', 't'])
+    call s:nvimux_bind_key('c', ':tabe\|'.g:nvimux_new_term.'<CR>', ['n', 'v', 'i', 't'])
     call s:nvimux_bind_key('t', ':tabe<CR>', ['n', 'v', 'i', 't'])
   else
     call s:nvimux_bind_key('c', ':tabe<CR>', ['n', 'v', 'i', 't'])
@@ -153,7 +153,7 @@ if !exists('$TMUX')
   call s:nvimux_bind_key('[', '', ['t'])
   call s:nvimux_bind_key(']', ':NvimuxTermPaste<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key(',', ':call NvimuxInteractiveTermRename()<CR>', ['n', 'v', 'i', 't'])
-  call s:nvimux_bind_key('x', ':'.s:nvimux_close_term.'<CR>', ['t'])
+  call s:nvimux_bind_key('x', ':'.g:nvimux_close_term.'<CR>', ['t'])
 
   if exists("g:nvimux_custom_bindings")
     for b in g:nvimux_custom_bindings
