@@ -23,7 +23,7 @@ call s:defn('g:nvimux_quickterm_scope', 'g')
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew
 command! -nargs=0 NvimuxTermPaste call s:term_only("normal pa")
-command! -nargs=0 NvimuxToggleTerm call NvimuxToggleTermFunc(g:nvimux_quickterm_scope)
+command! -nargs=0 NvimuxToggleTerm call NvimuxToggleTermFunc()
 command! -nargs=1 NvimuxTermRename call s:term_only("file term://<args>")
 
 " Use neoterm
@@ -83,12 +83,12 @@ function! s:nvimux_set_var_value(var_name, value) abort
   exec "let ".a:var_name." = ".a:value
 endfunction
 
-function! s:nvimux_new_toggle_term(scope) abort
+function! s:nvimux_new_toggle_term() abort
   exec s:nvimux_split_type." | terminal"
   set wfw
   let bufid = bufnr('%')
   call setbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)
-  call s:nvimux_set_var_value(a:scope.":nvimux_last_buffer_id", a:value)
+  call s:nvimux_set_var_value(g:nvimux_quickterm_scope.":nvimux_last_buffer_id", a:value)
 endfunction
 
 " Public Functions
@@ -120,8 +120,8 @@ function! NvimuxInteractiveTermRename() abort
   exec 'NvimuxTermRename '.term_name
 endfunction
 
-function! NvimuxToggleTermFunc(scope) abort
-  call NvimuxRawToggle(a:scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term('".a:scope."')")
+function! NvimuxToggleTermFunc() abort
+  call NvimuxRawToggle(g:nvimux_quickterm_scope.":nvimux_last_buffer_id", "call s:nvimux_new_toggle_term()")
 endfunction
 
 " TMUX emulation itself
