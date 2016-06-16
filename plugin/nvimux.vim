@@ -140,8 +140,8 @@ if !exists('$TMUX')
   call s:nvimux_bind_key('n', 'gt', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('p', 'gT', ['n', 'v', 'i', 't'])
 
-  call s:nvimux_bind_key('x', ':x<CR>', ['n', 'v', 'i'])
-  call s:nvimux_bind_key('X', ':bd %<CR>', ['n', 'v', 'i'])
+  call s:nvimux_bind_key('x', ':bd %<CR>', ['n', 'v', 'i'])
+  call s:nvimux_bind_key('X', ':enew \| bd #<CR>', ['n', 'v', 'i'])
 
   call s:nvimux_bind_key('h', '<C-w><C-h>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('j', '<C-w><C-j>', ['n', 'v', 'i', 't'])
