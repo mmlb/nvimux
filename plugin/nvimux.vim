@@ -63,8 +63,7 @@ function! s:nvimux_bind_key(k, v, modes) abort
 endfunction
 
 function! s:nvimux_get_var_value(var_name) abort
-  exec 'let s:tmp = '.a:var_name
-  return s:tmp
+  return eval(a:var_name)
 endfunction
 
 function! s:nvimux_set_var_value(var_name, value) abort
