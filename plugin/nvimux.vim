@@ -98,6 +98,7 @@ function! NvimuxRawToggle(backing_var, create_new) abort
     else
       exec wbuff.' wincmd w'
       q
+      stopinsert
     endif
   endif
 endfunction
