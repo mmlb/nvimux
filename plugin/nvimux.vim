@@ -55,7 +55,7 @@ endfunction
 
 function! s:nvimux_bind_key(k, v, modes) abort
   if exists('g:nvimux_override_'.a:k)
-    exec 'let p_cmd = 'g:nvimux_override_".a:k
+    exec 'let p_cmd = g:nvimux_override_'.a:k
     call s:nvimux_raw_bind(a:k, p_cmd, a:modes)
   else
     call s:nvimux_raw_bind(a:k, a:v, a:modes)
