@@ -71,7 +71,7 @@ function! s:nvimux_set_var_value(var_name, value) abort
 endfunction
 
 function! s:nvimux_new_toggle_term() abort
-  exec s:nvimux_split_type.' | '.g:nvimux_new_term
+  exec s:nvimux_split_type.' | enew | '.g:nvimux_new_term
   set wfw
   let bufid = bufnr('%')
   if bufnr('Quickterm') == -1
