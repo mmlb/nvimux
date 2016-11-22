@@ -74,9 +74,6 @@ function! s:nvimux_new_toggle_term() abort
   exec s:nvimux_split_type.' | enew | '.g:nvimux_new_term
   set wfw
   let bufid = bufnr('%')
-  if bufnr('Quickterm') == -1
-    NvimuxTermRename Quickterm
-  endif
   call setbufvar(bufid, 'nvimux_buf_orientation', s:nvimux_split_type)
   call s:nvimux_set_var_value(g:nvimux_quickterm_scope.':nvimux_last_buffer_id', bufid)
 endfunction
@@ -152,7 +149,7 @@ if !exists('$TMUX')
   call s:nvimux_bind_key(':', ':', ['t'])
   call s:nvimux_bind_key('[', '', ['t'])
   call s:nvimux_bind_key(']', ':NvimuxTermPaste<CR>', ['n', 'v', 'i', 't'])
-  call s:nvimux_bind_key(',', ':call NvimuxInteractiveTermRename()<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key(',', ':call NvimuxInteractiveTermRename()<CR>', ['t'])
   call s:nvimux_bind_key('x', ':'.g:nvimux_close_term.'<CR>', ['t'])
 
   if exists("g:nvimux_custom_bindings")
