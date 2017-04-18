@@ -30,7 +30,7 @@ Nvimux uses default neovim terminal implementation for terminal buffers (both qu
 One can define a different quickterm provider via `g:nvimux_quickterm_provider` and different commands for
 terminal creating/closing terminal buffers via `g:nvimux_new_term` and `g:nvimux_close_term`.
 
-###Defining quickterm position
+### Defining quickterm position
 
 You can set specific values for orientation, direction and size with the variables below:
 
