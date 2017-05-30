@@ -1,4 +1,9 @@
 " Private/Local functions
+if exists("g:nvimux_use_lua")
+  luafile nvimux.lua
+  finish
+fi
+
 function! s:defn(var, val)
   if !exists(a:var)
     exec 'let '.a:var."='".a:val."'"
@@ -116,7 +121,7 @@ endfunction
 if !exists('$TMUX')
 
   if exists('g:nvimux_open_term_by_default')
-    call s:nvimux_bind_key('c', ':tabe\|'.g:nvimux_new_term.'<CR>', ['n', 'v', 'i', 't'])
+    call s:vimux_bind_key('c', ':tabe\|'.g:nvimux_new_term.'<CR>', ['n', 'v', 'i', 't'])
     call s:nvimux_bind_key('t', ':tabe<CR>', ['n', 'v', 'i', 't'])
   else
     call s:nvimux_bind_key('c', ':tabe<CR>', ['n', 'v', 'i', 't'])
