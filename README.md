@@ -1,6 +1,13 @@
 NVIMUX
 ======
 
+### Lua port
+
+This plugin is being ported to lua at [the 'lua' branch](https://github.com/hkupty/nvimux/tree/lua). This branch is frozen until porting is complete.
+Feel free to test the lua version and send feedback.
+
+### About nvimux
+
 This plugin is a very simple set of keybindings that try to mimic tmux on neovim.
 
 Currently, there are no customisation and no fancy settings. I plan to have those anywhere in the future though.
