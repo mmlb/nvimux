@@ -240,7 +240,7 @@ nvimux.bindings.bind = function(options)
 end
 
 nvimux.bindings.bind_all = function(options)
-  for _, bind in ipair(bindings) do
+  for _, bind in ipairs(bindings) do
     fns.bind._(unpack(bind))
   end
 end
