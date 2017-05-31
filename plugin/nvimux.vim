@@ -1,5 +1,4 @@
-luafile lua/nvimux.lua
-
+echomsg %
 " Commands
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
 command! -nargs=0 NvimuxHorizontalSplit spl|wincmd j|enew

@@ -49,30 +49,28 @@ end
 -- [[ Table of default bindings
 local bindings = {
   mappings = {
-    ['<C-r>'] = { ':so $MYVIMRC', {'n', 'v', 'i'}},
-    ['!']     = { ':tabe %', {'n', 'v', 'i', 't'}},
-    ['%']     = { function() return vars.vertical_split end , {'n', 'v', 'i', 't'}},
-    ['"']     = { function() return vars.horizontal_split end, {'n', 'v', 'i', 't'}},
-    ['q']     = { ':NvimuxToggleTerm', {'n', 'v', 'i', 't'}},
-    ['w']     = { ':tabs', {'n', 'v', 'i', 't'}},
-    ['o']     = { '<C-w>w', {'n', 'v', 'i', 't'}},
-    ['n']     = { 'gt', {'n', 'v', 'i', 't'}},
-    ['p']     = { 'gT', {'n', 'v', 'i', 't'}},
-
-    ['x']     = { ':bd %', {'n', 'v', 'i'}},
-    ['X']     = { ':enew \\| bd #', {'n', 'v', 'i'}},
-
-    ['h']     = { '<C-w><C-h>', {'n', 'v', 'i', 't'}},
-    ['j']     = { '<C-w><C-j>', {'n', 'v', 'i', 't'}},
-    ['k']     = { '<C-w><C-k>', {'n', 'v', 'i', 't'}},
-    ['l']     = { '<C-w><C-l>', {'n', 'v', 'i', 't'}},
-    [':']     = { ':', {'t'}},
-    ['[']     = { '', {'t'}},
-    [']']     = { ':NvimuxTermPaste', {'n', 'v', 'i', 't'}},
-    [',']     = { '', {'t'}, nvimux.term.prompt.rename},
-    ['x']     = { function() return vars.close_term end, {'t'}}
+    ['<C-r>']  = {nvi  = {':so $MYVIMRC'}},
+    ['!']      = {nvit = {':tabe %'}},
+    ['%']      = {nvit = {function() return vars.vertical_split end} },
+    ['"']      = {nvit = {function() return vars.horizontal_split end}},
+    ['q']      = {nvit = {':NvimuxToggleTerm'}},
+    ['w']      = {nvit = {':tabs'}},
+    ['o']      = {nvit = {'<C-w>w'}},
+    ['n']      = {nvit = {'gt'}},
+    ['p']      = {nvit = {'gT'}},
+    ['x']      = {nvi  = {':bd %'},
+                  t    = {function() return vars.close_term end}},
+    ['X']      = {nvi  = {':enew \\| bd #'}},
+    ['h']      = {nvit = {'<C-w><C-h>'}},
+    ['j']      = {nvit = {'<C-w><C-j>'}},
+    ['k']      = {nvit = {'<C-w><C-k>'}},
+    ['l']      = {nvit = {'<C-w><C-l>'}},
+    [':']      = {t    = {':'}},
+    ['[']      = {t    = {''}},
+    [']']      = {nvit = {':NvimuxTermPaste'}},
+    [',']      = {t    = {'', nvimux.term.prompt.rename}},
   },
-  map_table = {}
+  map_table    = {}
 }
 
 -- ]]
@@ -109,6 +107,14 @@ end
 -- ]]
 
 -- [[ Commands and helper functions
+fns.split = function(str)
+  p = {}
+  for i=1, #str do
+    table.insert(p, str:sub(i, i))
+  end
+  return p
+end
+
 fns.exists = function(var)
   return nvim.nvim_call_function('exists', {var}) == 1
 end
@@ -204,7 +210,6 @@ end
 nvimux.bind = function(options)
   if fns.exists('nvimux_override_' .. options.key) then
     options.value = nvim.nvim_get_var('nvimux_override_' .. var)
-    print(options.value)
   end
   fns.bind._(options.key, options.value, options.modes)
 end
@@ -230,30 +235,32 @@ for key, cmd in pairs(defaults) do
 end
 
 if fns.exists('nvimux_open_term_by_default') then
-  bindings.mappings['c'] = { function() return ':tabe | ' .. vars.new_term end, {'n', 'v', 'i', 't'}}
-  bindings.mappings['t'] = { ':tabe', {'n', 'v', 'i', 't'}}
+  bindings.mappings['c'] = { nvit = {function() return ':tabe | ' .. vars.new_term end}}
+  bindings.mappings['t'] = { nvit = {':tabe'}}
 else
-  bindings.mappings['c'] = { ':tabe', {'n', 'v', 'i', 't'}}
+  bindings.mappings['c'] = { nvit = {':tabe'}}
 end
 
 for i=1, 9 do
-  bindings.mappings[i] = { i .. 'gt', {'n', 'v', 'i', 't'}}
+  bindings.mappings[i] = { nvit = {i .. 'gt'}}
 end
 
 for key, cmd in pairs(bindings.mappings) do
-  arg, modes, action = unpack(cmd)
-  if type(arg) == 'function' or action ~= nil then
-    bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
-    command = ':lua nvimux.mapped{key = "' .. key .. '"}'
-    print(key .. ' ' .. unpack(modes) .. ' ' .. command)
-  else
-    command = arg
+  for modes, data in pairs(cmd) do
+    modes = fns.split(modes)
+    arg, action = unpack(data)
+    if type(arg) == 'function' or action ~= nil then
+      bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
+      command = ':lua nvimux.mapped{key = "' .. key .. '"}'
+    else
+      command = arg
+    end
+    nvimux.bind{
+      ['key'] = key,
+      ['value'] = command,
+      ['modes'] = modes,
+    }
   end
-  nvimux.bind{
-    ['key'] = key,
-    ['value'] = command,
-    ['modes'] = modes,
-  }
 end
 
 if fns.exists('nvimux_custom_bindings') then
