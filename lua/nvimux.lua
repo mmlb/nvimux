@@ -1,6 +1,7 @@
 nvimux = {}
 nvimux.debug = {}
 nvimux.config = {}
+nvimux.bindings = {}
 nvimux.term = {}
 nvimux.term.prompt = {}
 
@@ -231,11 +232,17 @@ nvimux.term_only = function(options)
   end
 end
 
-nvimux.bind = function(options)
+nvimux.bindings.bind = function(options)
   if fns.exists('nvimux_override_' .. options.key) then
     options.value = nvim.nvim_get_var('nvimux_override_' .. var)
   end
   fns.bind._(options.key, options.value, options.modes)
+end
+
+nvimux.bindings.bind_all = function(options)
+  for _, bind in ipair(bindings) do
+    fns.bind._(unpack(bind))
+  end
 end
 
 nvimux.mapped = function(options)
@@ -283,17 +290,11 @@ for key, cmd in pairs(bindings.mappings) do
     else
       command = arg
     end
-    nvimux.bind{
+    nvimux.bindings.bind{
       ['key'] = key,
       ['value'] = command,
       ['modes'] = modes,
     }
-  end
-end
-
-if fns.exists('nvimux_custom_bindings') then
-  for _, bind in ipairs(vars.custom_bindings) do
-    fns.bind._(unpack(bind))
   end
 end
 -- ]
