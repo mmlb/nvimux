@@ -51,33 +51,33 @@ end
 -- [[ Table of default bindings
 local bindings = {
   mappings = {
-    ['<C-r>']  = {nvi  = {':so $MYVIMRC'}},
-    ['!']      = {nvit = {':tabe %'}},
-    ['%']      = {nvit = {function() return vars.vertical_split end} },
-    ['"']      = {nvit = {function() return vars.horizontal_split end}},
-    ['q']      = {nvit = {':NvimuxToggleTerm'}},
-    ['w']      = {nvit = {':tabs'}},
-    ['o']      = {nvit = {'<C-w>w'}},
-    ['n']      = {nvit = {'gt'}},
-    ['p']      = {nvit = {'gT'}},
-    ['x']      = {nvi  = {':bd %'},
-                  t    = {function() return vars.close_term end}},
-    ['X']      = {nvi  = {':enew \\| bd #'}},
-    ['h']      = {nvit = {'<C-w><C-h>'}},
-    ['j']      = {nvit = {'<C-w><C-j>'}},
-    ['k']      = {nvit = {'<C-w><C-k>'}},
-    ['l']      = {nvit = {'<C-w><C-l>'}},
-    [':']      = {t    = {':'}},
-    ['[']      = {t    = {''}},
-    [']']      = {nvit = {':NvimuxTermPaste'}},
-    [',']      = {t    = {'', nvimux.term.prompt.rename}},
+    ['<C-r>']  = { nvi  = {':so $MYVIMRC'}},
+    ['!']      = { nvit = {':tabe %'}},
+    ['%']      = { nvit = {function() return vars.vertical_split end} },
+    ['"']      = { nvit = {function() return vars.horizontal_split end}},
+    ['q']      = { nvit = {':NvimuxToggleTerm'}},
+    ['w']      = { nvit = {':tabs'}},
+    ['o']      = { nvit = {'<C-w>w'}},
+    ['n']      = { nvit = {'gt'}},
+    ['p']      = { nvit = {'gT'}},
+    ['x']      = { nvi  = {':bd %'},
+                   t    = {function() return vars.close_term end}},
+    ['X']      = { nvi  = {':enew \\| bd #'}},
+    ['h']      = { nvit = {'<C-w><C-h>'}},
+    ['j']      = { nvit = {'<C-w><C-j>'}},
+    ['k']      = { nvit = {'<C-w><C-k>'}},
+    ['l']      = { nvit = {'<C-w><C-l>'}},
+    [':']      = { t    = {':'}},
+    ['[']      = { t    = {''}},
+    [']']      = { nvit = {':NvimuxTermPaste'}},
+    [',']      = { t    = {'', nvimux.term.prompt.rename}},
+    ['c']      = { nvit = {function() return ':tabe | ' .. vars.new_term end}}
+    ['t']      = { nvit = {':tabe'}}
   },
   map_table    = {}
 }
 
 -- ]]
-
-local defaults = {unpack(vars)}
 
 setmetatable(vars, nvim_proxy)
 
@@ -259,23 +259,6 @@ end
 -- ]
 
 -- [ Runtime and warmup
-for key, cmd in pairs(defaults) do
-  if type(cmd) == "string" then
-    if fns.exist('nvimux_'..key) then
-      vars[key] = nvim.nvim_get_var('nvimux_'..key)
-    else
-      nvimux.config.set(key, cmd)
-    end
-  end
-end
-
-if fns.exists('nvimux_open_term_by_default') then
-  bindings.mappings['c'] = { nvit = {function() return ':tabe | ' .. vars.new_term end}}
-  bindings.mappings['t'] = { nvit = {':tabe'}}
-else
-  bindings.mappings['c'] = { nvit = {':tabe'}}
-end
-
 for i=1, 9 do
   bindings.mappings[i] = { nvit = {i .. 'gt'}}
 end
