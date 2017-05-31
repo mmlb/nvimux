@@ -158,6 +158,12 @@ nvimux.config.set = function(options)
   vars[options.key] = options.value
   nvim.nvim_set_var('nvimux_' .. options.key, options.value)
 end
+
+nvimux.config.set_all = function(options)
+  for key, value in pairs(options) do
+    nvimux.config.set{['key'] = key, ['value'] = value}
+  end
+end
 -- ]]
 
 -- [[ Quickterm
