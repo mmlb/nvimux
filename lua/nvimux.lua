@@ -297,4 +297,7 @@ for key, cmd in pairs(bindings.mappings) do
     }
   end
 end
+
+-- Announce load finished
+nvim.nvim_command("doautocmd User NvimuxLoaded")
 -- ]
