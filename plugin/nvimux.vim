@@ -1,7 +1,5 @@
-echo 1
 " TODO Remove after https://github.com/neovim/neovim/pull/6789 gets merged
 exec 'luafile' . expand('<sfile>:p:h') . '/../lua/nvimux.lua'
-echo 2
 
 " Commands
 command! -nargs=0 NvimuxVerticalSplit vspl|wincmd l|enew
