@@ -1,4 +1,7 @@
 nvimux = {}
+nvimux.config = {}
+nvimux.term = {}
+nvimux.term.prompt = {}
 
 --[[
 Nvimux: Neovim as a terminal multiplexer.
@@ -57,7 +60,7 @@ local bindings = {
     ['p']     = { 'gT', {'n', 'v', 'i', 't'}},
 
     ['x']     = { ':bd %', {'n', 'v', 'i'}},
-    ['X']     = { ':enew \| bd #', {'n', 'v', 'i'}},
+    ['X']     = { ':enew \\| bd #', {'n', 'v', 'i'}},
 
     ['h']     = { '<C-w><C-h>', {'n', 'v', 'i', 't'}},
     ['j']     = { '<C-w><C-j>', {'n', 'v', 'i', 't'}},
@@ -66,22 +69,11 @@ local bindings = {
     [':']     = { ':', {'t'}},
     ['[']     = { '', {'t'}},
     [']']     = { ':NvimuxTermPaste', {'n', 'v', 'i', 't'}},
-    [',']     = { nil, {'t'}, nvimux.term.prompt.rename},
+    [',']     = { '', {'t'}, nvimux.term.prompt.rename},
     ['x']     = { function() return vars.close_term end, {'t'}}
   },
   map_table = {}
 }
-
-if fns.exists('nvimux_open_term_by_default') then
-  bindings.mappings['c'] = { function() ':tabe | ' .. vars.new_term end, {'n', 'v', 'i', 't'}}
-  bindings.mappings['t'] = { ':tabe', {'n', 'v', 'i', 't'}}
-else
-  bindings.mappings['c'] = { ':tabe', {'n', 'v', 'i', 't'}}
-end
-
-for i=1, 9 do
-  bindings.mappings[i] = { i .. 'gt', {'n', 'v', 'i', 't'}}
-end
 
 -- ]]
 
@@ -94,11 +86,11 @@ setmetatable(vars, nvim_proxy)
 -- [ Private functions
 -- [[ keybind commands
 fns.bind_fn = function(options)
-  prefix = options.prefix  or ''
-  mode = options.mode
   return function(key, command)
     suffix = string.sub(command, 1, 1) == ':' and '<CR>' or ''
-    nvim.nvim_command(mode .. 'noremap <silent>' .. vars.prefix .. key .. ' ' .. prefix .. command .. suffix)
+    prefix = options.prefix  or ''
+    mode = options.mode
+    nvim.nvim_command(mode .. 'noremap <silent> ' .. vars.prefix .. key .. ' ' .. prefix .. command .. suffix)
   end
 end
 
@@ -155,7 +147,6 @@ end
 -- ]]
 
 -- [[ Config-handling commands
-nvimux.config = {}
 nvimux.config.set = function(options)
   vars[options.key] = options.value
   nvim.nvim_set_var('nvimux_' .. options.key, options.value)
@@ -163,7 +154,6 @@ end
 -- ]]
 
 -- [[ Quickterm
-nvimux.term = {}
 nvimux.term.new_toggle = function()
   split_type = vars:split_type()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
@@ -213,7 +203,8 @@ end
 
 nvimux.bind = function(options)
   if fns.exists('nvimux_override_' .. options.key) then
-    options.key = nvim.nvim_get_var('nvimux_override_' .. var)
+    options.value = nvim.nvim_get_var('nvimux_override_' .. var)
+    print(options.value)
   end
   fns.bind._(options.key, options.value, options.modes)
 end
@@ -221,7 +212,12 @@ end
 nvimux.mapped = function(options)
   mapping = bindings.map_table[options.key]
   action = mapping.action or nvim.nvim_command
-  action(mapping.arg)
+  if type(mapping.arg) == 'function' then
+    arg = mapping.arg()
+  else
+    arg = mapping.arg
+  end
+  action(arg)
 end
  -- ]]
 -- ]
@@ -233,18 +229,30 @@ for key, cmd in pairs(defaults) do
   end
 end
 
+if fns.exists('nvimux_open_term_by_default') then
+  bindings.mappings['c'] = { function() return ':tabe | ' .. vars.new_term end, {'n', 'v', 'i', 't'}}
+  bindings.mappings['t'] = { ':tabe', {'n', 'v', 'i', 't'}}
+else
+  bindings.mappings['c'] = { ':tabe', {'n', 'v', 'i', 't'}}
+end
+
+for i=1, 9 do
+  bindings.mappings[i] = { i .. 'gt', {'n', 'v', 'i', 't'}}
+end
+
 for key, cmd in pairs(bindings.mappings) do
   arg, modes, action = unpack(cmd)
   if type(arg) == 'function' or action ~= nil then
     bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
     command = ':lua nvimux.mapped{key = "' .. key .. '"}'
+    print(key .. ' ' .. unpack(modes) .. ' ' .. command)
   else
     command = arg
   end
   nvimux.bind{
     ['key'] = key,
-    ['value'] = command
-    ['modes'] = modes
+    ['value'] = command,
+    ['modes'] = modes,
   }
 end
 
