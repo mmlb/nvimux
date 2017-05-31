@@ -172,7 +172,7 @@ nvimux.term.new_toggle = function()
   split_type = vars:split_type()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
   buf_nr = nvim.nvim_call_function('bufnr', {'%'})
-  nvim.nvim_buf_set_option(buf_nr, 'wfw', true)
+  nvim.nvim_set_option('wfw', true)
   nvim.nvim_buf_set_var(buf_nr, 'nvimux_buf_orientation', split_type)
   -- TODO Allow quickterm_scope
   nvimux.config.set{key = 'last_buffer_id', value = buf_nr}
@@ -191,7 +191,6 @@ nvimux.term.toggle = function()
       else
         split_type = nvim.nvim_buf_get_var(buf_nr, 'nvimux_buf_orientation')
         nvim.nvim_command(split_type .. ' | b' .. buf_nr)
-        nvim.nvim_buf_set_option(buf_nr, 'wfw', true)
       end
     else
       nvim.nvim_command(window .. ' wincmd w | q | stopinsert')
