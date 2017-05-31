@@ -206,6 +206,22 @@ nvimux.term.prompt.rename = function()
 end
 -- ]]
 
+-- [[ Bindings
+nvimux.bindings.bind = function(options)
+  if fns.exists('nvimux_override_' .. options.key) then
+    options.value = nvim.nvim_get_var('nvimux_override_' .. var)
+  end
+  fns.bind._(options.key, options.value, options.modes)
+end
+
+nvimux.bindings.bind_all = function(options)
+  for _, bind in ipairs(options) do
+    fns.bind._(unpack(bind))
+  end
+end
+
+-- ]]
+
 -- [[ Top-level commands
 nvimux.debug.vars = function()
   for k, v in pairs(vars) do
@@ -229,19 +245,6 @@ nvimux.term_only = function(options)
     action(options.cmd)
   else
     print("Not on terminal")
-  end
-end
-
-nvimux.bindings.bind = function(options)
-  if fns.exists('nvimux_override_' .. options.key) then
-    options.value = nvim.nvim_get_var('nvimux_override_' .. var)
-  end
-  fns.bind._(options.key, options.value, options.modes)
-end
-
-nvimux.bindings.bind_all = function(options)
-  for _, bind in ipairs(bindings) do
-    fns.bind._(unpack(bind))
   end
 end
 
