@@ -71,8 +71,8 @@ local bindings = {
     ['[']      = { t    = {''}},
     [']']      = { nvit = {':NvimuxTermPaste'}},
     [',']      = { t    = {'', nvimux.term.prompt.rename}},
-    ['c']      = { nvit = {function() return ':tabe | ' .. vars.new_term end}}
-    ['t']      = { nvit = {':tabe'}}
+    ['c']      = { nvit = {function() return ':tabe | ' .. vars.new_term end}},
+    ['t']      = { nvit = {':tabe'}},
   },
   map_table    = {}
 }
