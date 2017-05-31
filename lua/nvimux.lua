@@ -1,4 +1,5 @@
 nvimux = {}
+nvimux.debug = {}
 nvimux.config = {}
 nvimux.term = {}
 nvimux.term.prompt = {}
@@ -164,6 +165,7 @@ nvimux.term.new_toggle = function()
   split_type = vars:split_type()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
   buf_nr = nvim.nvim_call_function('bufnr', {'%'})
+  nvim.nvim_set_option('wfw', true)
   nvim.nvim_buf_set_var(buf_nr, 'nvimux_buf_orientation', split_type)
   -- TODO Allow quickterm_scope
   nvimux.config.set{key = 'last_buffer_id', value = buf_nr}
@@ -198,6 +200,22 @@ end
 -- ]]
 
 -- [[ Top-level commands
+nvimux.debug.vars = function()
+  for k, v in pairs(vars) do
+    print(k, v)
+  end
+end
+
+nvimux.debug.bindings = function()
+  for k, v in pairs(bindings.mappings) do
+    print(k, v)
+  end
+  print('')
+  for k, v in pairs(bindings.map_table) do
+    print(k, v)
+  end
+end
+
 nvimux.term_only = function(options)
   action = options.action or nvim.nvim_command
   if nvim.nvim_buf_get_option('%', 'buftype') == 'terminal' then
@@ -230,7 +248,11 @@ end
 -- [ Runtime and warmup
 for key, cmd in pairs(defaults) do
   if type(cmd) == "string" then
-    nvimux.config.set(key, cmd)
+    if fns.exist('nvimux_'..key) then
+      vars[key] = nvim.nvim_get_var('nvimux_'..key)
+    else
+      nvimux.config.set(key, cmd)
+    end
   end
 end
 
