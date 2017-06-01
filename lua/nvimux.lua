@@ -1,4 +1,4 @@
-local nvimux = {}
+nvimux = {}
 nvimux.debug = {}
 nvimux.config = {}
 nvimux.bindings = {}
