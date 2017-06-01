@@ -1,4 +1,4 @@
-nvimux = {}
+local nvimux = {}
 nvimux.debug = {}
 nvimux.config = {}
 nvimux.bindings = {}
@@ -10,10 +10,11 @@ Nvimux: Neovim as a terminal multiplexer.
 
 This is the lua reimplementation of VimL.
 --]]
+-- luacheck: globals unpack
 
 
 -- [ Private variables and tables
-local nvim = vim.api
+local nvim = vim.api -- luacheck: ignore
 local consts = {
   terminal_quit = '<C-\\><C-n>',
   esc = '<ESC>',
@@ -22,8 +23,8 @@ local consts = {
 local fns = {}
 local nvim_proxy = {
   __index = function(table, key)
-    key_ = 'nvimux_' .. key
-    val = nil
+    local key_ = 'nvimux_' .. key
+    local val = nil
     if fns.exists(key_) then
       val = nvim.nvim_get_var(key_)
       table[key] = val
@@ -86,10 +87,10 @@ setmetatable(vars, nvim_proxy)
 -- [ Private functions
 -- [[ keybind commands
 fns.bind_fn = function(options)
+    local prefix = options.prefix  or ''
+    local mode = options.mode
   return function(key, command)
-    suffix = string.sub(command, 1, 1) == ':' and '<CR>' or ''
-    prefix = options.prefix  or ''
-    mode = options.mode
+    local suffix = string.sub(command, 1, 1) == ':' and '<CR>' or ''
     nvim.nvim_command(mode .. 'noremap <silent> ' .. vars.prefix .. key .. ' ' .. prefix .. command .. suffix)
   end
 end
@@ -110,7 +111,7 @@ end
 
 -- [[ Commands and helper functions
 fns.split = function(str)
-  p = {}
+  local p = {}
   for i=1, #str do
     table.insert(p, str:sub(i, i))
   end
@@ -132,7 +133,7 @@ end
 
 fns.prompt = function(message)
   nvim.nvim_call_function('inputsave', {})
-  ret = nvim.nvim_call_function('input', {message})
+  local ret = nvim.nvim_call_function('input', {message})
   nvim.nvim_call_function('inputrestore', {})
   return ret
 end
@@ -140,20 +141,6 @@ end
 -- ]
 
 -- [ Public API
--- [[ Public, but non-preferred
-nvimux._reset = function()
-  for key, value in pairs(defaults) do
-    nvimux.config.set(key, value)
-  end
-end
-
-nvimux._refresh = function()
-  for key, _ in pairs(vars) do
-    vars[key] = nvim.nvim_get_var('nvimux_' .. key)
-  end
-end
--- ]]
-
 -- [[ Config-handling commands
 nvimux.config.set = function(options)
   vars[options.key] = options.value
@@ -169,9 +156,9 @@ end
 
 -- [[ Quickterm
 nvimux.term.new_toggle = function()
-  split_type = vars:split_type()
+  local split_type = vars:split_type()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
-  buf_nr = nvim.nvim_call_function('bufnr', {'%'})
+  local buf_nr = nvim.nvim_call_function('bufnr', {'%'})
   nvim.nvim_set_option('wfw', true)
   nvim.nvim_buf_set_var(buf_nr, 'nvimux_buf_orientation', split_type)
   -- TODO Allow quickterm_scope
@@ -183,13 +170,13 @@ nvimux.term.toggle = function()
   if vars.last_buffer_id == nil then
     nvimux.term.new_toggle()
   else
-    buf_nr = vars.last_buffer_id
-    window = nvim.nvim_call_function('bufwinnr', {buf_nr})
+    local buf_nr = vars.last_buffer_id
+    local window = nvim.nvim_call_function('bufwinnr', {buf_nr})
     if window == -1 then
       if nvim.nvim_call_function('bufname', {buf_nr}) == '' then
         nvimux.term.new_toggle()
       else
-        split_type = nvim.nvim_buf_get_var(buf_nr, 'nvimux_buf_orientation')
+        local split_type = nvim.nvim_buf_get_var(buf_nr, 'nvimux_buf_orientation')
         nvim.nvim_command(split_type .. ' | b' .. buf_nr)
       end
     else
@@ -208,8 +195,9 @@ end
 
 -- [[ Bindings
 nvimux.bindings.bind = function(options)
-  if fns.exists('nvimux_override_' .. options.key) then
-    options.value = nvim.nvim_get_var('nvimux_override_' .. var)
+  local override = 'nvimux_override_' .. options.key
+  if fns.exists(override) then
+    options.value = nvim.nvim_get_var(override)
   end
   fns.bind._(options.key, options.value, options.modes)
 end
@@ -240,7 +228,7 @@ nvimux.debug.bindings = function()
 end
 
 nvimux.term_only = function(options)
-  action = options.action or nvim.nvim_command
+  local action = options.action or nvim.nvim_command
   if nvim.nvim_buf_get_option('%', 'buftype') == 'terminal' then
     action(options.cmd)
   else
@@ -249,14 +237,13 @@ nvimux.term_only = function(options)
 end
 
 nvimux.mapped = function(options)
-  mapping = bindings.map_table[options.key]
-  action = mapping.action or nvim.nvim_command
+  local mapping = bindings.map_table[options.key]
+  local action = mapping.action or nvim.nvim_command
   if type(mapping.arg) == 'function' then
-    arg = mapping.arg()
+     action(mapping.arg())
   else
-    arg = mapping.arg
+     action(mapping.arg)
   end
-  action(arg)
 end
  -- ]]
 -- ]
@@ -269,18 +256,18 @@ end
 for key, cmd in pairs(bindings.mappings) do
   for modes, data in pairs(cmd) do
     modes = fns.split(modes)
-    arg, action = unpack(data)
-    if type(arg) == 'function' or action ~= nil then
-      bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
-      command = ':lua nvimux.mapped{key = "' .. key .. '"}'
-    else
-      command = arg
-    end
-    nvimux.bindings.bind{
+    local arg, action = unpack(data)
+    local binds = {
       ['key'] = key,
-      ['value'] = command,
       ['modes'] = modes,
     }
+    if type(arg) == 'function' or action ~= nil then
+      bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
+      binds.value = ':lua nvimux.mapped{key = "' .. key .. '"}'
+    else
+      binds.value = arg
+    end
+    nvimux.bindings.bind(binds)
   end
 end
 -- ]
