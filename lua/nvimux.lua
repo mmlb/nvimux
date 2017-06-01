@@ -52,7 +52,7 @@ end
 local bindings = {
   mappings = {
     ['<C-r>']  = { nvi  = {':so $MYVIMRC'}},
-    ['!']      = { nvit = {':tabe %'}},
+    ['!']      = { nvit = {':wincmd T'}},
     ['%']      = { nvit = {function() return vars.vertical_split end} },
     ['"']      = { nvit = {function() return vars.horizontal_split end}},
     ['q']      = { nvit = {':NvimuxToggleTerm'}},
