@@ -170,8 +170,8 @@ end
 
 fns.variables.get = function(options)
   local mode = options.mode or 'g'
+  print(mode)
   options.nr = options.nr or fns.variables.scoped.arg[mode]()
-  print(unpack(options))
   return fns.variables.scoped.get[mode](options)
 end
 
