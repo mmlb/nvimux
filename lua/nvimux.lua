@@ -156,16 +156,16 @@ fns.variables.scoped = {
   },
   get = {
     b = function(options)
-      return fns.exists('b:' .. options.name) and nvim.nvim_buf_get_var(options.nr, options.name)
+      return fns.exists('b:' .. options.name) and nvim.nvim_buf_get_var(options.nr, options.name) or nil
     end,
     t = function(options)
-      return fns.exists('t:' .. options.name) and nvim.nvim_tabpage_get_var(options.nr, options.name)
+      return fns.exists('t:' .. options.name) and nvim.nvim_tabpage_get_var(options.nr, options.name) or nil
     end,
     l = function(options)
-      return fns.exists('l:' .. options.name) and nvim.nvim_win_get_var(options.nr, options.name)
+      return fns.exists('l:' .. options.name) and nvim.nvim_win_get_var(options.nr, options.name) or nil
     end,
     g = function(options)
-      return fns.exists('g:' .. options.name) and nvim.nvim_get_var(options.name)
+      return fns.exists('g:' .. options.name) and nvim.nvim_get_var(options.name) or nil
     end,
   },
 }
