@@ -195,16 +195,16 @@ nvimux.term.new_toggle = function()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
   local buf_nr = nvim.nvim_call_function('bufnr', {'%'})
   nvim.nvim_set_option('wfw', true)
-  fns.variables.scoped{mode='b', nr=buf_nr, name='nvimux_buf_orientation', value=split_type}
-  fns.variables.scoped{mode=vars.quickterm_scope, name='nvimux_last_buffer_id', value=buf_nr}
+  fns.variables.scoped.set{mode='b', nr=buf_nr, name='nvimux_buf_orientation', value=split_type}
+  fns.variables.scoped.set{mode=vars.quickterm_scope, name='nvimux_last_buffer_id', value=buf_nr}
 end
 
 nvimux.term.toggle = function()
   -- TODO Allow external commands
-  if vars.last_buffer_id == nil then
+  local buf_nr = fns.variables.scoped.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
+  if buf_nr == nil then
     nvimux.term.new_toggle()
   else
-    local buf_nr = vars.last_buffer_id
     local window = nvim.nvim_call_function('bufwinnr', {buf_nr})
     if window == -1 then
       if nvim.nvim_call_function('bufname', {buf_nr}) == '' then
