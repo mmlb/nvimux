@@ -173,12 +173,12 @@ setmetatable(fns.variables.scoped.get, _select)
 
 fns.variables.set = function(options)
   options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
-  fns.variables.scoped.set(options)
+  fns.variables.scoped.set[options.mode](options)
 end
 
 fns.variables.get = function(options)
   options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
-  return fns.variables.scoped.get(options)
+  return fns.variables.scoped.get[options.mode](options)
 end
 
 -- ]]
@@ -204,13 +204,13 @@ nvimux.term.new_toggle = function()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
   local buf_nr = nvim.nvim_call_function('bufnr', {'%'})
   nvim.nvim_set_option('wfw', true)
-  fns.variables.scoped.set{mode='b', nr=buf_nr, name='nvimux_buf_orientation', value=split_type}
-  fns.variables.scoped.set{mode=vars.quickterm_scope, name='nvimux_last_buffer_id', value=buf_nr}
+  fns.variables.set{mode='b', nr=buf_nr, name='nvimux_buf_orientation', value=split_type}
+  fns.variables.set{mode=vars.quickterm_scope, name='nvimux_last_buffer_id', value=buf_nr}
 end
 
 nvimux.term.toggle = function()
   -- TODO Allow external commands
-  local buf_nr = fns.variables.scoped.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
+  local buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
   print(buf_nr)
   if buf_nr == nil then
     nvimux.term.new_toggle()
