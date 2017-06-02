@@ -144,7 +144,7 @@ fns.variables = {}
 fns.variables.scoped = {
   arg = {
     b = function() return nvim.nvim_call_function('bufnr', {'%'}) end,
-    t = function() return nvim.nvim_call_function('tabpagenr', {}) end,
+    t = function() print(1) return nvim.nvim_call_function('tabpagenr', {}) end,
     l = function() return nvim.nvim_call_function('winnr', {}) end,
     g = function() return nil end,
   },
@@ -170,7 +170,6 @@ end
 
 fns.variables.get = function(options)
   local mode = options.mode or 'g'
-  print(mode)
   options.nr = options.nr or fns.variables.scoped.arg[mode]()
   return fns.variables.scoped.get[mode](options)
 end
