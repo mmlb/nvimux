@@ -171,8 +171,8 @@ end
 
 fns.variables.get = function(options)
   local mode = options.mode or 'g'
-  options.nr = options.nr or fns.variables.scoped.arg[mode]()
-  return fns.variables.scoped.get[mode](options)
+  local nr = options.nr or fns.variables.scoped.arg[mode]()
+  return fns.variables.scoped.get[mode]{['nr'] = nr, ['name'] = options.name}
 end
 
 -- ]]
