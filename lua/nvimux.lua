@@ -142,6 +142,7 @@ end
 -- [[ Set var
 local _select = {
   __call = function(table, options)
+    print(unpack(options))
     return table[options.mode](options)
   end
 }
