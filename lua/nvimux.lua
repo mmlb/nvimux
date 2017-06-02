@@ -309,7 +309,7 @@ for key, cmd in pairs(bindings.mappings) do
     }
     if type(arg) == 'function' or action ~= nil then
       bindings.map_table[key] = {['arg'] = arg, ['action'] = action}
-      binds.value = ':lua nvimux.mapped{key = "' .. key .. '"}'
+      binds.value = ':lua require("nvimux").mapped{key = "' .. key .. '"}'
     else
       binds.value = arg
     end
