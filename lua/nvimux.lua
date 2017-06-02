@@ -138,6 +138,41 @@ fns.prompt = function(message)
   return ret
 end
 -- ]]
+
+-- [[ Set var
+fns.variables = {}
+fns.variables.scoped = {
+  arg = {
+    b = function() return nvim.nvim_call_function('bufnr', {'%'}) end,
+    t = function() return nvim.nvim_call_function('tabpagenr', {}) end,
+    l = function() return nvim.nvim_call_function('winnr', {}) end,
+    g = function() return nil end,
+  },
+  set = {
+    b = function(options) return nvim.nvim_buf_set_var(options.nr, options.name, options.value) end,
+    t = function(options) return nvim.nvim_tabpage_set_var(options.nr, options.name, options.value) end,
+    l = function(options) return nvim.nvim_win_set_var(options.nr, options.name, options.value) end,
+    g = function(options) return nvim.nvim_set_var(options.name, options.value) end,
+  },
+  get = {
+    b = function(options) return nvim.nvim_buf_get_var(options.nr, options.name) end,
+    t = function(options) return nvim.nvim_tabpage_get_var(options.nr, options.name) end,
+    l = function(options) return nvim.nvim_win_get_var(options.nr, options.name) end,
+    g = function(options) return nvim.nvim_get_var(options.name) end,
+  },
+}
+
+fns.variables.set = function(options)
+  options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
+  fns.variables.scoped.set[options.mode](options)
+end
+
+fns.variables.get = function(options)
+  options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
+  return fns.variables.scoped.get[options.mode](options)
+end
+
+-- ]]
 -- ]
 
 -- [ Public API
@@ -160,9 +195,8 @@ nvimux.term.new_toggle = function()
   nvim.nvim_command(split_type .. ' | enew | ' .. vars.new_term)
   local buf_nr = nvim.nvim_call_function('bufnr', {'%'})
   nvim.nvim_set_option('wfw', true)
-  nvim.nvim_buf_set_var(buf_nr, 'nvimux_buf_orientation', split_type)
-  -- TODO Allow quickterm_scope
-  nvimux.config.set{key = 'last_buffer_id', value = buf_nr}
+  fns.variables.scoped{mode='b', nr=buf_nr, name='nvimux_buf_orientation', value=split_type}
+  fns.variables.scoped{mode=vars.quickterm_scope, name='nvimux_last_buffer_id', value=buf_nr}
 end
 
 nvimux.term.toggle = function()
