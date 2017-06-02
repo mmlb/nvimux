@@ -155,10 +155,18 @@ fns.variables.scoped = {
     g = function(options) return nvim.nvim_set_var(options.name, options.value) end,
   },
   get = {
-    b = function(options) return nvim.nvim_buf_get_var(options.nr, options.name) end,
-    t = function(options) return nvim.nvim_tabpage_get_var(options.nr, options.name) end,
-    l = function(options) return nvim.nvim_win_get_var(options.nr, options.name) end,
-    g = function(options) return nvim.nvim_get_var(options.name) end,
+    b = function(options)
+      return fns.exists('b:' .. options.name) and nvim.nvim_buf_get_var(options.nr, options.name)
+    end,
+    t = function(options)
+      return fns.exists('t:' .. options.name) and nvim.nvim_tabpage_get_var(options.nr, options.name)
+    end,
+    l = function(options)
+      return fns.exists('l:' .. options.name) and nvim.nvim_win_get_var(options.nr, options.name)
+    end,
+    g = function(options)
+      return fns.exists('g:' .. options.name) and nvim.nvim_get_var(options.name)
+    end,
   },
 }
 
@@ -204,7 +212,6 @@ end
 nvimux.term.toggle = function()
   -- TODO Allow external commands
   local buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
-  print(buf_nr or 1)
   if buf_nr == nil then
     nvimux.term.new_toggle()
   else
