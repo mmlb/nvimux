@@ -140,12 +140,6 @@ end
 -- ]]
 
 -- [[ Set var
-local _select = {
-  __call = function(table, options)
-    return table[options.mode or 'g'](options)
-  end
-}
-
 fns.variables = {}
 fns.variables.scoped = {
   arg = {
@@ -168,17 +162,16 @@ fns.variables.scoped = {
   },
 }
 
-setmetatable(fns.variables.scoped.set, _select)
-setmetatable(fns.variables.scoped.get, _select)
-
 fns.variables.set = function(options)
-  options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
-  fns.variables.scoped.set[options.mode](options)
+  local mode = options.mode or 'g'
+  options.nr = options.nr or fns.variables.scoped.arg[mode]()
+  fns.variables.scoped.set[mode](options)
 end
 
 fns.variables.get = function(options)
-  options.nr = options.nr or fns.variables.scoped.arg[options.mode]()
-  return fns.variables.scoped.get[options.mode](options)
+  local mode = options.mode or 'g'
+  options.nr = options.nr or fns.variables.scoped.arg[mode]()
+  return fns.variables.scoped.get[mode](options)
 end
 
 -- ]]
@@ -210,6 +203,7 @@ end
 
 nvimux.term.toggle = function()
   -- TODO Allow external commands
+  print(vars.quickterm_scope)
   local buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
   print(buf_nr)
   if buf_nr == nil then
