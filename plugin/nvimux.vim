@@ -123,7 +123,7 @@ if !exists('$TMUX')
   endif
 
   call s:nvimux_bind_key('<C-r>', ':so $MYVIMRC<CR>', ['n', 'v', 'i'])
-  call s:nvimux_bind_key('!', ':tabe %<CR>', ['n', 'v', 'i', 't'])
+  call s:nvimux_bind_key('!', ':wincmd T<CR>', ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('%', g:nvimux_vertical_split , ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('"', g:nvimux_horizontal_split, ['n', 'v', 'i', 't'])
   call s:nvimux_bind_key('q', ':NvimuxToggleTerm<CR>', ['n', 'v', 'i', 't'])
