@@ -6,6 +6,10 @@ NVIMUX
 This plugin is being ported to lua at [the 'lua' branch](https://github.com/hkupty/nvimux/tree/lua). This branch is frozen until porting is complete.
 Feel free to test the lua version and send feedback.
 
+### Support nvimux
+Support iron.nvim development by sending me some bitcoins at `137gRFaXxJmyV23FA9PZZ6Fp8Pvs11gPPV`.
+
+
 ### About nvimux
 
 This plugin is a very simple set of keybindings that try to mimic tmux on neovim.
