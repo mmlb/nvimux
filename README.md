@@ -7,7 +7,7 @@ This plugin is being ported to lua at [the 'lua' branch](https://github.com/hkup
 Feel free to test the lua version and send feedback.
 
 ### Support nvimux
-Support iron.nvim development by sending me some bitcoins at `137gRFaXxJmyV23FA9PZZ6Fp8Pvs11gPPV`.
+Support nvimux development by sending me some bitcoins at `137gRFaXxJmyV23FA9PZZ6Fp8Pvs11gPPV`.
 
 
 ### About nvimux
