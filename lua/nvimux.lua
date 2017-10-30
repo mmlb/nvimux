@@ -172,7 +172,6 @@ fns.variables.scoped = {
 fns.variables.set = function(options)
   local mode = options.mode or 'g'
   options.nr = options.nr or fns.variables.scoped.arg[mode]()
-  print("Setting '" .. options.name .. "' with value: " .. options.value .. " on scope " .. mode .. "#" .. options.nr)
   fns.variables.scoped.set[mode](options)
 end
 
@@ -212,7 +211,6 @@ end
 nvimux.term.toggle = function()
   -- TODO Allow external commands
   local buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
-  print(buf_nr)
   if not buf_nr then
     nvimux.term.new_toggle()
   else
