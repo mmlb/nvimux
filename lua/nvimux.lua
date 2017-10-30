@@ -142,9 +142,9 @@ end
 fns.variables = {}
 fns.variables.scoped = {
   arg = {
-    b = function() return nvim.nvim_call_function('bufnr', {'%'}) end,
-    t = function() return nvim.nvim_call_function('tabpagenr', {}) end,
-    l = function() return nvim.nvim_call_function('winnr', {}) end,
+    b = function() return nvim.nvim_get_current_buf() end,
+    t = function() return nvim.nvim_get_current_tabpage() end,
+    l = function() return nvim.nvim_get_current_win() end,
     g = function() return nil end,
   },
   set = {
