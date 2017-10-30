@@ -1,56 +1,58 @@
-NVIMUX
-======
+# NVIMUX
 
-This plugin is a very simple set of keybindings that try to mimic tmux on neovim.
+Nvimux allows neovim to work as a tmux replacement.
 
-Currently, there are no customisation and no fancy settings. I plan to have those anywhere in the future though.
+It does so by mapping tmuxs keybindings to neovim, using its windows, buffers and terminals.
 
-Feel free to use!
+### Support nvimux
+Support nvimux development by sending me some bitcoins at `137gRFaXxJmyV23FA9PZZ6Fp8Pvs11gPPV`.
 
-Also, I'll be very glad if you could open a PR helping enhance this.
+## Configuring
 
-Alternate Prefix
-----------------
+Nvimux is built on [lua](https://github.com/neovim/neovim/pull/4411), meaning that you must use a somewhat recent version of neovim.
 
-Nvimux now allows alternate tmux prefix.
+For the older version, based on viml, refer to [the legacy branch](https://github.com/hkupty/nvimux/tree/legacy). The legacy branch won't be maintained but will be kept for those who prefer it.
 
-By doing `let g:nvimux_prefix='<C-a>'` you can override the default `<C-b>`.
+To configure nvimux, you can use both lua and viml to configure, though the first is much preferred.
 
-Open Terminal By Default
-------------------------
+A lua-based configuration for nvimux is as follows:
 
-To open a terminal with `<prefix>-c` instead of a new, empty screen, you can `let nvimux_open_term_by_default=1`.
-In this case, opening a blank screen moves to `<prefix>-t`.
+```lua
+lua << EOF
+local nvimux = require('nvimux')
 
-Terminal Provider
------------------
+-- Nvimux configuration
+nvimux.config.set_all{
+  prefix = '<C-a>',
+  open_term_by_default = true,
+  new_window_buffer = 'single',
+  quickterm_direction = 'botright',
+  quickterm_orientation = 'vertical',
+  -- Use 'g' for global quickterm
+  quickterm_scope = 't',
+  quickterm_size = '80',
+}
 
-Nvimux uses default neovim terminal implementation for terminal buffers (both quickterm and terminal window).
-
-One can define a different quickterm provider via `g:nvimux_quickterm_provider` and different commands for
-terminal creating/closing terminal buffers via `g:nvimux_new_term` and `g:nvimux_close_term`.
-
-### Defining quickterm position
-
-You can set specific values for orientation, direction and size with the variables below:
-
-```vim
-"This are the defaults
-let g:nvimux_quickterm_direction = 'botright'
-let g:nvimux_quickterm_orientation = 'vertical'
-let g:nvimux_quickterm_size = ''
+-- Nvimux custom bindings
+nvimux.bindings.bind_all{
+  {'s', ':NvimuxHorizontalSplit', {'n', 'v', 'i', 't'}},
+  {'v', ':NvimuxVerticalSplit', {'n', 'v', 'i', 't'}},
+}
 ```
 
-Overriding defaults
--------------------
+On viml, the variables can be defined using the same name, prepending `nvimux_` to it:
 
-If you want to override any of the predefined commands, you can define `g:nvimux_override_{command}` for any specified command.
-For example, by default `<prefix>-n` will execute a `gt` (go to next tab), but you can define `let nvimux_override_n=":term<CR>"` and
-`<prefix>-n` will now turn current window into a terminal.
+```viml
+  let g:nvimux_prefix = '<C-a>',
+  let g:nvimux_open_term_by_default = true,
+  let g:nvimux_new_window_buffer = 'single',
+  let g:nvimux_quickterm_direction = 'botright',
+  let g:nvimux_quickterm_orientation = 'vertical',
+  let g:nvimux_quickterm_scope = 't',
+  let g:nvimux_quickterm_size = '80',
+```
 
-
-Credits & Stuff
----------------
+## Credits & Stuff
 
 This plugin is developed and maintained by [Henry Kupty](http://github.com/hkupty) and it's completely free to use.
 The rationale behind the idea is described [in this article](http://hkupty.github.io/2016/Ditching-TMUX/).
