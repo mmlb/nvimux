@@ -22,12 +22,11 @@ local consts = {
 
 local fns = {}
 local nvim_proxy = {
-  __index = function(table, key)
+  __index = function(_, key)
     local key_ = 'nvimux_' .. key
     local val = nil
     if fns.exists(key_) then
       val = nvim.nvim_get_var(key_)
-      table[key] = val
     end
     return val
   end
@@ -317,5 +316,6 @@ for key, cmd in pairs(bindings.mappings) do
   end
 end
 -- ]
+
 
 return nvimux
