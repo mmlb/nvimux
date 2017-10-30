@@ -212,10 +212,10 @@ nvimux.term.toggle = function()
   -- TODO Allow external commands
   local buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
   print(buf_nr)
-  if buf_nr == nil then
+  if not buf_nr then
+    print("New toggle")
     nvimux.term.new_toggle()
   else
-    buf_nr = fns.variables.get{mode=vars.quickterm_scope, name='nvimux_last_buffer_id'}
     local window = nvim.nvim_call_function('bufwinnr', {buf_nr})
     if window == -1 then
       if nvim.nvim_call_function('bufname', {buf_nr}) == '' then
